@@ -21,7 +21,7 @@ class SubscriberController {
             : { message: "Successfully Subscribed" }
         );
     } catch (error) {
-      console.error("controller {subcribe}:", error.message);
+      console.error("subscribe {controller}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -33,18 +33,22 @@ class SubscriberController {
         .status(201)
         .json({ message: "Successfully Retrieved", data: subscriber });
     } catch (error) {
-      console.error("controller {get subscriber}:", error.message);
+      console.error("read subscribers {controller}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
   async unSubscribe(req, res) {
+    const { email } = req.body;
     try {
-      const { id } = req.params;
-      const subscriber = await this.service.unSubscribeService(id);
-      return res.status(201).json({ message: true, data: subscriber });
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      await this.service.unSubscribeService(email);
+      return res.status(201).json({ message: true });
     } catch (error) {
-      console.error("controller {unsubscribe}:", error.message);
+      console.error("unsubscribe {controller}:", error.message);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -62,7 +66,27 @@ class SubscriberController {
         return res.status(200).json({ message: "Mail Not Sent" });
       }
     } catch (error) {
-      console.error("controller {notifySubscribers}:", error.message);
+      console.error("notify subscribers {controller}:", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  async readMessages(req, res) {
+    try {
+      const message = await this.service.readMessages();
+      return res.status(201).json({ message: true, data: message });
+    } catch (error) {
+      console.error("read messages {controller}:", error.message);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  async deleteMessages(req, res) {
+    try {
+      await this.service.deleteMessageService();
+      return res.status(201).json({ message: "Successfully Deleted" });
+    } catch (error) {
+      console.error("delete message {controller}:", error.message);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }

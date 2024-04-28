@@ -1,22 +1,22 @@
 import { rateLimit } from "express-rate-limit";
 
-const adminlimiter = rateLimit({
-  windowMs: 5 * 60 * 1000,
-  limit: 1000,
+const adminLimiter = rateLimit({
+  windowMs: 25 * 60 * 1000,
+  limit: 5,
   delayMs: 0,
   handler: (req, res) => {
-    res.status(429).json({ error: "Too Many Request" });
+    res.status(429).json({ error: "You exceeded your request limit" });
   },
 });
 
 const userLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 100,
+  windowMs: 8 * 60 * 1000,
+  limit: 10000,
   delayMs: 0,
-  skip: (req) => req.url === "/admin/signin",
+  skip: (req) => req.url === "/admin/signin" || req.url === "/unsubscribe",
   handler: (req, res) => {
-    res.status(429).json({ error: "Too Many Request" });
+    res.status(429).json({ error: "You exceeded your request limit" });
   },
 });
 
-export default [adminlimiter, userLimiter];
+export default [adminLimiter, userLimiter];

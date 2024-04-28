@@ -75,7 +75,7 @@ CREATE TABLE `category`(
     PRIMARY KEY(`id`)
 );
 
-CREATE TABLE `subscribe`(
+CREATE TABLE `subscribers`(
     `id` VARCHAR(80) NOT NULL,
     `email` VARCHAR(50) NOT NULL,
     PRIMARY KEY(`id`)

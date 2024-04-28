@@ -2,7 +2,7 @@ import express from "express";
 import { upload } from "../../../configuration/multer.js";
 import { administratorDependencies } from "../settings/administratorDependency.js";
 import passport from "../../../configuration/authentication.js";
-import adminlimiter from "../../../configuration/rateLimiter.js";
+import adminLimiter from "../../../configuration/rateLimiter.js";
 
 const { administratorController } = administratorDependencies();
 
@@ -14,7 +14,7 @@ administratorRouter.get("/admin", async (req, res) =>
 
 administratorRouter.post(
   "/admin/signin",
-  adminlimiter,
+  adminLimiter,
   passport.authenticate("local"),
   async (req, res) => administratorController.signInAdmin(req, res)
 );

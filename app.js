@@ -68,4 +68,8 @@ app.use(categoryRouter);
 app.use(testimonialRouter);
 app.use(cookieRouter);
 
+if (process.env.NODE_ENV === "production") {
+  console.log = () => {};
+}
+
 app.listen(PORT, () => console.log(`Connected on http://localhost:${PORT}`));

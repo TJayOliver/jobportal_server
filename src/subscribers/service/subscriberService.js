@@ -21,9 +21,7 @@ class SubscriberService {
         const subscriber = await this.database.createSubscriber(
           subscriberDetails
         );
-        const receiverID = subscriberDetails[0];
         const receiverEmail = subscriberDetails[1];
-        const unSubscribeLink = `<a href='http://${CLIENT_URL}/unsubscribe/${receiverID}'>Click to Unsubscribe</a>`;
         await sendMail(
           receiverEmail,
           "Empowering Your Journey: Exclusive Job Opportunities, Scholarships, and Career Guidance Await You!",
@@ -36,33 +34,32 @@ class SubscriberService {
               <title>Future Forte</title>
           </head>
           <style>
-    
-          @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-              *{padding: 0; margin: 0;}
-              .poppins-medium {
-                font-family: "Poppins", sans-serif;
-                font-weight: 500;
-                font-style: normal;
+              @import url('https://fonts.googleapis.com/css2?family=Inter:wgh@100..900&display=swap');
+              @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+          
+              * {
+                  padding: 0;
+                  margin: 0;
               }
-              .pacifico-regular {
-                font-family: "Pacifico", cursive;
-                font-weight: 400;
-                font-style: normal;
-              }
-              
-              body{
+          
+              body {
                   background-color: #f9f9f7;
                   display: flex;
+                  flex-direction: column;
                   justify-content: center;
                   align-items: center;
-                  font-family:'Poppins', sans-serif;
+                  font-family: 'Inter', sans-serif;
+                  font-optical-sizing: auto;
+                  font-weight: 500;
+                  font-style: normal;
+                  font-variation-settings: "slnt" 0;
               }
-              main{
-                height: 100vh;
-                padding: 10px;
+          
+              main {
+                  height: 100vh;
               }
-              .footer{
+          
+              .footer {
                   background-color: black;
                   height: 200px;
                   color: white;
@@ -71,17 +68,23 @@ class SubscriberService {
                   justify-content: center;
                   align-items: center;
                   gap: 30px;
+                  width: 100%;
+                  max-width: 50%;
               }
-              .socials{
+          
+              .socials {
                   display: flex;
                   gap: 25px;
               }
-              .site-name{
-                font-family: 'Pacifico', cursive;
+          
+              .site-name {
+                  font-family: 'Bebas', sans-serif;
                   font-size: 50px;
               }
-              
-              .job, .scholarship, .career{
+          
+              .job,
+              .scholarship,
+              .career {
                   height: 200px;
                   display: flex;
                   flex-direction: column;
@@ -89,11 +92,10 @@ class SubscriberService {
                   align-items: center;
                   padding: 10px;
               }
-              .scholarship{
-                  background-color: black;
-                  color: white;
-              }
-              .job a, .scholarship a, .career a{
+          
+              .job a,
+              .scholarship a,
+              .career a {
                   background-color: rgb(253, 253, 253);
                   padding: 8px;
                   border-radius: 8px;
@@ -102,135 +104,148 @@ class SubscriberService {
                   display: flex;
                   width: 200px;
               }
-              .job, .career{
+          
+              .job,
+              .career {
                   background-color: white;
               }
-              .job a, .career a{
-                  background-color: #f9f9f7;
-                  color: rgb(0, 0, 0);
-              }
-
-              .text{
+          
+              .text {
                   display: flex;
                   flex-direction: column;
                   gap: 8px;
-                  color: white;
               }
-            
-              .header{
+          
+              .header {
                   display: flex;
                   justify-content: center;
                   align-items: center;
                   background-color: black;
                   color: white;
-                  padding: 5px;
+                  padding: 15px;
               }
-              .header h1{font-size: 25px;}
-
-
+          
+              .header h1 {
+                  font-size: 25px;
+                  font-family: 'Bebas Neue', sans-serif;
+                  font-weight: 400;
+                  font-style: normal;
+              }
+          
+          
               @media only screen and (max-width:480px) {
-                  .job, .scholarship, .career{
-                  width: full;
-                  display: flex;
-                  flex-wrap: wrap;
-                  padding: 10px;
-                  justify-content: space-around;
-                  align-items: center;
+          
+                  .job,
+                  .scholarship,
+                  .career {
+                      width: full;
+                      display: flex;
+                      flex-wrap: wrap;
+                      padding: 10px;
+                      justify-content: space-around;
+                      align-items: center;
                   }
-                  .header h1{
+          
+                  .header h1 {
                       font-size: 5px;
                   }
-                  .image{
-                      height: 230px;
-                  }
-                  
-                  .main{
+          
+                  .main {
                       display: flex;
-                      gap:50px
-                  }   
-                  .site-name{
-                      font-size: 25px;
-                      font-family : .pacifico-regular
+                      gap: 50px
                   }
-                  .job a, .scholarship a, .career a{
+          
+                  .site-name {
+                      font-size: 25px;
+                  }
+          
+                  .job a,
+                  .scholarship a,
+                  .career a {
                       width: 200px;
                   }
-              }
-
-              @media only screen and (max-width:768px) {
-                  .job, .scholarship, .career{
-                  width: full;
-                  display: flex;
-                  flex-wrap: wrap;
-                  padding: 10px;
-                  justify-content: space-around;
-                  align-items: center;
+          
+                  .footer {
+                      height: 200px;
                   }
-                  .header h1{
+              }
+          
+              @media only screen and (max-width:768px) {
+          
+                  .job,
+                  .scholarship,
+                  .career {
+                      width: full;
+                      display: flex;
+                      flex-wrap: wrap;
+                      padding: 10px;
+                      justify-content: space-around;
+                      align-items: center;
+                  }
+          
+                  .header h1 {
                       font-size: 20px;
                   }
-                  .image{
+          
+                  .image {
                       height: 230px;
                   }
-                  
-                  .main{
+          
+                  .main {
                       display: flex;
-                      gap:50px
-                  }   
+                      gap: 50px
+                  }
+          
                   .image {
                       width: 100%;
                   }
               }
-              
           </style>
+          
           <body>
               <main>
-                  <div class="header">
-                      <h1>Welcome to</h1> <br>
-                      <p class="site-name">FutureForte !</p>
-                      
-                  </div>
-
+                  <header class="header">
+                      <h1>FUTURE FORTE</h1>
+                  </header>
                   <!-- job opport -->
-                  <div class="job">
+                  <section class="job">
                       <div class="text">
                           <h2>Find the latest <br> Job Opportunities</h2>
-                          <small>Get ready to elevate your career with our curated list of job openings that match your skills and interests.</small>
-                          <a href="${CLIENT_URL}/job">Search</a>
+                          <small>Get ready to elevate your career with our curated list of job openings that match your skills and
+                              interests.</small>
+                          <a href="${CLIENT_URL}/job" style="background-color:black; font-weight: 500; color:white">Search</a>
                       </div>
-                  </div>
-
+                  </section>
+          
                   <!-- scholarship opport -->
-                  <div class="scholarship">
+                  <section class="scholarship" style="background-color: black; color: white;">
                       <div class="text">
                           <h2>Find the latest <br>Scholarship Opportunities</h2>
-                          <small>Explore our  selected scholarships that can help alleviate the financial burden of your academic pursuit</small>
-                          <a href="${CLIENT_URL}/scholarship">Search</a>
+                          <small>Explore our selected scholarships that can help alleviate the financial burden of your academic
+                              pursuit</small>
+                          <a href="${CLIENT_URL}/job" style="background-color:white; font-weight: 500; color:black">Search</a>
                       </div>
-                  </div>
-
+                  </section>
+          
                   <!-- career opport -->
-                  <div class="career">
+                  <section class="career">
                       <div class="text">
-                          <h2>Read Inspiring Career Guidance Articles</h2>
-                          <small>Explore resources that are designed to provide insights and expert advice to help you make decisions</small>
-                          <a href="${CLIENT_URL}/articles">Search</a>
+                          <h2 style="color:black">Read Inspiring Career Guidance Articles</h2>
+                          <small style="color:black">Explore resources that are designed to provide insights and expert advice to
+                              help you make
+                              decisions</small>
+                          <a href="${CLIENT_URL}/job" style="background-color:black; font-weight: 500; color:white">Search</a>
                       </div>
-                  </div>
-                  
-                  <div class="footer">
-                      <p>Follow us on Social Media</p>
-                      <div class=" socials">
-                          <p>Facebook</p>
-                          <p>Instagram</p>
-                          <p>X</p>
-                          <p>LinkedIn</p>
-                      </div>
-                  </div>
-                  <a href="${unSubscribeLink}">Click To Unsubscribe</a>
+                  </section>
+          
+                  <section
+                      style="background-color: black; color:white; padding:14px; height: 200px;display: flex; align-items: center; justify-content: center;">
+                      <a href="${CLIENT_URL}/unsubscribe" style="color: white; text-align: center; ">Click to Unsubscribe</a>
+                  </section>
               </main>
           </body>
-            </html>`
+          
+          </html>`
         );
         return subscriber;
       }
@@ -248,9 +263,9 @@ class SubscriberService {
     }
   }
 
-  async unSubscribeService(id) {
+  async unSubscribeService(email) {
     try {
-      const subscriber = await this.database.unSubscribe(id);
+      const subscriber = await this.database.unSubscribe(email);
       return subscriber;
     } catch (error) {
       console.error("service {unsubscribe}:", error.message);
@@ -259,100 +274,126 @@ class SubscriberService {
 
   async notifySubscribersService({ subject, message }) {
     try {
-      const receipients = await this.database.readSubscriber();
+      const receipients = await this.database.readSubscriberEmail();
+      const address = [];
+      receipients.map((rec) => {
+        address.push(rec.email);
+      });
       const response = await sendMail(
-        receipients,
+        address,
         subject,
         `<!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Future Forte</title>
-      </head>
-      <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-          @font-face {
-              font-family: "AliandoRocky";
-              src: url('../../public/font/AliandoRocky.ttf') format("truetype");
-          }
-
-          *{padding: 0; margin: 0;}
-          body{
-              background-color: #f9f9f7;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              font-family: 'Inter', sans-serif;
-          }
-          main{
-            height: 100vh;
-            padding: 10px;
-          }
-          .footer{
-              background-color: black;
-              height: 400px;
-              color: white;
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              gap: 30px;
-          }
-          .socials{
-              display: flex;
-              gap: 25px;
-          }
-          .site-name{
-              font-family: "AliandoRocky", sans-serif;
-              font-size: 50px;
-          }
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Future Forte</title>
+        </head>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wgh@100..900&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
         
-          .text{
-              display: flex;
-              flex-direction: column;
-              gap: 8px;
-          }
+            * {
+                padding: 0;
+                margin: 0;
+            }
         
-          .header{
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              background-color: black;
-              color: white;
-              padding: 5px;
-          }
-          .header h1{font-size: 25px;}
-          
-      </style>
-      <body>
-          <main>
-              <div class="header">
-                  <h1>Welcome to</h1> <br>
-                  <p class="site-name">FutureForte !</p>
-              </div>
-              <div>
-              <p>${message}</p>
-              <div>
-              <div class="footer">
-                  <p>Follow us on Social Media</p>
-                  <div class=" socials">
-                      <p>Facebook</p>
-                      <p>Instagram</p>
-                      <p>X</p>
-                      <p>LinkedIn</p>
-                  </div>
-              </div>
-              <p>${unSubscribeLink}</p>
-          </main>
-      </body>
+            body {
+                background-color: #f9f9f7;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-family: 'Inter', sans-serif;
+                font-optical-sizing: auto;
+                font-weight: 500;
+                font-style: normal;
+                font-variation-settings: "slnt" 0;
+            }
+        
+            main {
+                height: 100svh;
+                width: 100%;
+                max-width: 50%;
+            }
+        
+            .site-name {
+                font-family: 'Bebas', sans-serif;
+                font-size: 50px;
+            }
+        
+            .header {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: rgb(64, 59, 121);
+                color: white;
+                padding: 15px;
+            }
+        
+            .header h1 {
+                font-size: 25px;
+                font-family: 'Bebas Neue', sans-serif;
+                font-weight: 400;
+                font-style: normal;
+            }
+        
+            @media only screen and (max-width:480px) {
+        
+                .header h1 {
+                    font-size: 5px;
+                }
+        
+                .main {
+                    display: flex;
+                    gap: 50px
+                }
+        
+                .site-name {
+                    font-size: 25px;
+                }
+        
+                .footer {
+                    height: 200px;
+                }
+            }
+        
+            @media only screen and (max-width:768px) {
+        
+                .header h1 {
+                    font-size: 20px;
+                }
+        
+                .main {
+                    display: flex;
+                    gap: 50px
+                }
+            }
+        </style>
+        <body>
+            <main>
+                <header class="header">
+                    <h1>FUTURE FORTE</h1>
+                </header>
+        
+                <section style="height: auto;">
+                    <div style="text-align: justify; padding: 8px;">${message}</div>
+                </section>
+        
+                <section
+                    style=" background-color:rgb(64, 59, 121); color:white; padding:14px; height: 200px;display: flex; align-items: center; justify-content: center;">
+                    <a href="${CLIENT_URL}/unsubscribe" style="color: white; text-align: center; ">Click to Unsubscribe</a>
+                </section>
+            </main>
+        </body>
         </html>`
       );
       await this.database.notifySubscribers({
         id: nanoid(),
         subject: response.subject,
-        receiver: response.receiver,
+        message: message,
+        receiver: "To All Subscribers",
         messageId: response.messageId,
       });
       if (response.sent) {
@@ -363,6 +404,24 @@ class SubscriberService {
     } catch (error) {
       console.error("service {notifySubscribers}:", error.message);
       return { sent: false };
+    }
+  }
+
+  async readMessages() {
+    try {
+      const message = await this.database.readMessages();
+      return message;
+    } catch (error) {
+      console.error("read message {service}:", error.message);
+    }
+  }
+
+  async deleteMessageService() {
+    try {
+      const message = await this.database.deleteMessages();
+      return message;
+    } catch (error) {
+      console.error("delete message {service}:", error.message);
     }
   }
 }
