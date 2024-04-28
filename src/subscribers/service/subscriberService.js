@@ -36,19 +36,27 @@ class SubscriberService {
               <title>Future Forte</title>
           </head>
           <style>
-              @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-              @font-face {
-                  font-family: "AliandoRocky";
-                  src: url('../../public/font/AliandoRocky.ttf') format("truetype");
-              }
+    
+          @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
               *{padding: 0; margin: 0;}
+              .poppins-medium {
+                font-family: "Poppins", sans-serif;
+                font-weight: 500;
+                font-style: normal;
+              }
+              .pacifico-regular {
+                font-family: "Pacifico", cursive;
+                font-weight: 400;
+                font-style: normal;
+              }
+              
               body{
                   background-color: #f9f9f7;
                   display: flex;
                   justify-content: center;
                   align-items: center;
-                  font-family: 'Inter', sans-serif;
+                  font-family:'Poppins', sans-serif;
               }
               main{
                 height: 100vh;
@@ -56,7 +64,7 @@ class SubscriberService {
               }
               .footer{
                   background-color: black;
-                  height: 400px;
+                  height: 200px;
                   color: white;
                   display: flex;
                   flex-direction: column;
@@ -69,7 +77,7 @@ class SubscriberService {
                   gap: 25px;
               }
               .site-name{
-                  font-family: "AliandoRocky", sans-serif;
+                font-family: 'Pacifico', cursive;
                   font-size: 50px;
               }
               
@@ -106,6 +114,7 @@ class SubscriberService {
                   display: flex;
                   flex-direction: column;
                   gap: 8px;
+                  color: white;
               }
             
               .header{
@@ -141,6 +150,7 @@ class SubscriberService {
                   }   
                   .site-name{
                       font-size: 25px;
+                      font-family : .pacifico-regular
                   }
                   .job a, .scholarship a, .career a{
                       width: 200px;
@@ -186,7 +196,7 @@ class SubscriberService {
                       <div class="text">
                           <h2>Find the latest <br> Job Opportunities</h2>
                           <small>Get ready to elevate your career with our curated list of job openings that match your skills and interests.</small>
-                          <a href="http://localhost:4040/job">Search</a>
+                          <a href="${CLIENT_URL}/job">Search</a>
                       </div>
                   </div>
 
@@ -195,7 +205,7 @@ class SubscriberService {
                       <div class="text">
                           <h2>Find the latest <br>Scholarship Opportunities</h2>
                           <small>Explore our  selected scholarships that can help alleviate the financial burden of your academic pursuit</small>
-                          <a href="http://localhost:4040/scholarship">Search</a>
+                          <a href="${CLIENT_URL}/scholarship">Search</a>
                       </div>
                   </div>
 
@@ -204,7 +214,7 @@ class SubscriberService {
                       <div class="text">
                           <h2>Read Inspiring Career Guidance Articles</h2>
                           <small>Explore resources that are designed to provide insights and expert advice to help you make decisions</small>
-                          <a href="http://localhost:4040/articles">Search</a>
+                          <a href="${CLIENT_URL}/articles">Search</a>
                       </div>
                   </div>
                   
@@ -217,7 +227,7 @@ class SubscriberService {
                           <p>LinkedIn</p>
                       </div>
                   </div>
-                  <p>${unSubscribeLink}</p>
+                  <a href="${unSubscribeLink}">Click To Unsubscribe</a>
               </main>
           </body>
             </html>`
