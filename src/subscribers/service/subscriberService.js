@@ -1,4 +1,4 @@
-import { sendMail } from "../../../mail/sendMail.js";
+import { sendMail, sendMailNotify } from "../../../mail/sendMail.js";
 import { nanoid } from "nanoid";
 import dotenv from "dotenv";
 dotenv.config();
@@ -279,7 +279,7 @@ class SubscriberService {
       receipients.map((rec) => {
         address.push(rec.email);
       });
-      const response = await sendMail(
+      const response = await sendMailNotify(
         address,
         subject,
         `<!DOCTYPE html>
