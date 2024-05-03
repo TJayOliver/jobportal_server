@@ -11,7 +11,7 @@ const adminLimiter = rateLimit({
 
 const userLimiter = rateLimit({
   windowMs: 8 * 60 * 1000,
-  limit: 10000,
+  limit: 100000000,
   delayMs: 0,
   skip: (req) => req.url === "/admin/signin" || req.url === "/unsubscribe",
   handler: (req, res) => {

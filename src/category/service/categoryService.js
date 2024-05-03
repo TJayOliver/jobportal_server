@@ -10,8 +10,7 @@ class CategoryService {
       const checkCategory = await this.database.readCategoryByName(
         categoryname
       );
-      if (checkCategory.length > 0)
-        return { error: `${categoryname} Already Exist` };
+      if (checkCategory) return { error: `${categoryname} Already Exist` };
       const categoryDetails = {
         id: nanoid(),
         categoryname,
@@ -25,12 +24,7 @@ class CategoryService {
 
   async countCategoryService() {
     try {
-      const categoryy = await this.database.countCategory();
-      let category = "";
-      categoryy.map((newData) => {
-        const counter = Object.values(newData);
-        category += counter;
-      });
+      const category = await this.database.countCategory();
       return category;
     } catch (error) {
       console.error("service {count category}:", error.message);

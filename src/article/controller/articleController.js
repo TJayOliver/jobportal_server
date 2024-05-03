@@ -60,7 +60,7 @@ class ArticleController {
       const article = await this.service.readArticleByIdService(id);
       return res
         .status(201)
-        .json({ message: "Successfully Received", data: article });
+        .json({ message: "Successfully Received", data: [article] });
     } catch (error) {
       console.error("controller {read article by id}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });

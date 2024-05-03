@@ -1,20 +1,9 @@
-import { executeQuery } from "../../../configuration/mysql.config.js";
+import { testimonialModel } from "../../../schema/mongoSchema.js";
 
 class TestimonialDatabase {
   async createTestimonial(details) {
     try {
-      const query = `INSERT 
-            INTO testimonial (id, name, image, quote, position, author) 
-            VALUES (?,?,?,?,?,?)`;
-      const parameter = [
-        details.id,
-        details.name,
-        details.image,
-        details.quote,
-        details.position,
-        details.author,
-      ];
-      const testimonial = await executeQuery(query, parameter);
+      const testimonial = await testimonialModel.create(details);
       return testimonial;
     } catch (error) {
       throw error;
@@ -23,8 +12,10 @@ class TestimonialDatabase {
 
   async readTestimonial() {
     try {
-      const query = `SELECT * FROM testimonial`;
-      const testimonial = await executeQuery(query);
+      const testimonial = await testimonialModel
+        .find()
+        .sort({ datecreated: 1 })
+        .limit(3);
       return testimonial;
     } catch (error) {
       throw error;
@@ -33,9 +24,7 @@ class TestimonialDatabase {
 
   async editTestimonial(id) {
     try {
-      const query = `SELECT * FROM testimonial WHERE id = ?`;
-      const parameter = [id];
-      const testimonial = await executeQuery(query, parameter);
+      const testimonial = await testimonialModel.find({ id: id });
       return testimonial;
     } catch (error) {
       throw error;
@@ -44,20 +33,10 @@ class TestimonialDatabase {
 
   async updateTestimonial(details) {
     try {
-      const query = `UPDATE testimonial SET
-            name = ?,
-            image = ?,
-            quote = ?,
-            position = ?
-            WHERE id = ?`;
-      const parameter = [
-        details.name,
-        details.image,
-        details.quote,
-        details.position,
-        details.id,
-      ];
-      const testimonial = await executeQuery(query, parameter);
+      const id = details?.id;
+      const { name, image, quote, position } = details;
+      const update = { name, image, quote, position };
+      const testimonial = await testimonialModel.updateOne({ id: id });
       return testimonial;
     } catch (error) {
       throw error;
@@ -66,9 +45,7 @@ class TestimonialDatabase {
 
   async deleteTestimonial(id) {
     try {
-      const query = `DELETE FROM testimonial WHERE id = ?`;
-      const parameter = [id];
-      const testimonial = await executeQuery(query, parameter);
+      const testimonial = await testimonialModel.deleteOne({ id: id });
       return testimonial;
     } catch (error) {
       throw error;

@@ -7,9 +7,10 @@ const userConsent = async (req, res) => {
   try {
     if (response === "OK") {
       const getUserLocation = await obtainUserLocation(ip);
-      if (getUserLocation.exits)
+      if (getUserLocation && getUserLocation.exits) {
         return res.status(201).json({ status: true, message: "User Exists" });
-      if (getUserLocation.obtained) {
+      }
+      if (getUserLocation && getUserLocation.obtained) {
         const country = getUserLocation.country;
         const token = jwt.sign({ country: country }, process.env._c, {
           expiresIn: "1yr",
@@ -31,7 +32,7 @@ const userConsent = async (req, res) => {
         .json({ status: false, message: "User Rejected Cookie" });
     }
   } catch (error) {
-    console.error(error.message);
+    console.error("cookie:{controller}", error.message);
   }
 };
 

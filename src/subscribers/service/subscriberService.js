@@ -1,7 +1,5 @@
 import { sendMail, sendMailNotify } from "../../../mail/sendMail.js";
 import { nanoid } from "nanoid";
-import dotenv from "dotenv";
-dotenv.config();
 
 const CLIENT_URL = process.env.CLIENT_URL;
 
@@ -17,234 +15,264 @@ class SubscriberService {
         return { error: "Already a Subscriber. Thank You" };
       } else {
         const email = Email;
-        const subscriberDetails = [nanoid(), email];
+        const subscriberDetails = { id: nanoid(), email: email };
         const subscriber = await this.database.createSubscriber(
           subscriberDetails
         );
-        const receiverEmail = subscriberDetails[1];
+        const receiverEmail = subscriberDetails.email;
         await sendMail(
           receiverEmail,
           "Empowering Your Journey: Exclusive Job Opportunities, Scholarships, and Career Guidance Await You!",
           `<!DOCTYPE html>
           <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta http-equiv="X-UA-Compatible" content="IE=edge">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <head>
+              <meta charset="UTF-8" />
+              <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
               <title>Future Forte</title>
-          </head>
-          <style>
-              @import url('https://fonts.googleapis.com/css2?family=Inter:wgh@100..900&display=swap');
-              @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+            </head>
+            <style>
+              @import url("https://fonts.googleapis.com/css2?family=Inter:wgh@100..900&display=swap");
+              @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
           
               * {
-                  padding: 0;
-                  margin: 0;
+                padding: 0;
+                margin: 0;
               }
           
               body {
-                  background-color: #f9f9f7;
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: center;
-                  align-items: center;
-                  font-family: 'Inter', sans-serif;
-                  font-optical-sizing: auto;
-                  font-weight: 500;
-                  font-style: normal;
-                  font-variation-settings: "slnt" 0;
+                background-color: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-family: "Inter", sans-serif;
+                font-optical-sizing: auto;
+                font-weight: 500;
+                font-style: normal;
+                font-variation-settings: "slnt" 0;
               }
           
               main {
-                  height: 100vh;
+                height: 100vh;
               }
           
               .footer {
-                  background-color: black;
-                  height: 200px;
-                  color: white;
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: center;
-                  align-items: center;
-                  gap: 30px;
-                  width: 100%;
-                  max-width: 50%;
+                background-color: black;
+                height: 200px;
+                color: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 30px;
+                width: 100%;
+                max-width: 50%;
               }
           
               .socials {
-                  display: flex;
-                  gap: 25px;
-              }
-          
-              .site-name {
-                  font-family: 'Bebas', sans-serif;
-                  font-size: 50px;
+                display: flex;
+                gap: 25px;
               }
           
               .job,
               .scholarship,
               .career {
-                  height: 200px;
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: space-around;
-                  align-items: center;
-                  padding: 10px;
+                height: 200px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: center;
+                padding: 10px;
               }
           
               .job a,
               .scholarship a,
               .career a {
-                  background-color: rgb(253, 253, 253);
-                  padding: 8px;
-                  border-radius: 8px;
-                  text-decoration: none;
-                  color: black;
-                  display: flex;
-                  width: 200px;
+                background-color: rgb(253, 253, 253);
+                padding: 8px;
+                border-radius: 8px;
+                text-decoration: none;
+                color: black;
+                display: flex;
+                width: 200px;
               }
           
               .job,
               .career {
-                  background-color: white;
+                background-color: white;
               }
           
               .text {
-                  display: flex;
-                  flex-direction: column;
-                  gap: 8px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
               }
           
               .header {
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  background-color: black;
-                  color: white;
-                  padding: 15px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #153448;
+                padding: 15px;
               }
           
               .header h1 {
+                font-size: 25px;
+                font-family: "Bebas Neue", sans-serif;
+                font-weight: 400;
+                font-style: normal;
+                color: white;
+              }
+          
+              @media only screen and (max-width: 480px) {
+                .job,
+                .scholarship,
+                .career {
+                  width: full;
+                  display: flex;
+                  flex-wrap: wrap;
+                  padding: 10px;
+                  justify-content: space-around;
+                  align-items: center;
+                }
+          
+                .header h1 {
+                  font-size: 5px;
+                }
+          
+                .main {
+                  display: flex;
+                  gap: 50px;
+                }
+          
+                .site-name {
                   font-size: 25px;
-                  font-family: 'Bebas Neue', sans-serif;
-                  font-weight: 400;
-                  font-style: normal;
+                }
+          
+                .job a,
+                .scholarship a,
+                .career a {
+                  width: 200px;
+                }
+          
+                .footer {
+                  height: 200px;
+                }
               }
           
+              @media only screen and (max-width: 768px) {
+                .job,
+                .scholarship,
+                .career {
+                  width: full;
+                  display: flex;
+                  flex-wrap: wrap;
+                  padding: 10px;
+                  justify-content: space-around;
+                  align-items: center;
+                }
           
-              @media only screen and (max-width:480px) {
+                .header h1 {
+                  font-size: 20px;
+                }
           
-                  .job,
-                  .scholarship,
-                  .career {
-                      width: full;
-                      display: flex;
-                      flex-wrap: wrap;
-                      padding: 10px;
-                      justify-content: space-around;
-                      align-items: center;
-                  }
+                .image {
+                  height: 230px;
+                }
           
-                  .header h1 {
-                      font-size: 5px;
-                  }
+                .main {
+                  display: flex;
+                  gap: 50px;
+                }
           
-                  .main {
-                      display: flex;
-                      gap: 50px
-                  }
-          
-                  .site-name {
-                      font-size: 25px;
-                  }
-          
-                  .job a,
-                  .scholarship a,
-                  .career a {
-                      width: 200px;
-                  }
-          
-                  .footer {
-                      height: 200px;
-                  }
+                .image {
+                  width: 100%;
+                }
               }
+            </style>
           
-              @media only screen and (max-width:768px) {
-          
-                  .job,
-                  .scholarship,
-                  .career {
-                      width: full;
-                      display: flex;
-                      flex-wrap: wrap;
-                      padding: 10px;
-                      justify-content: space-around;
-                      align-items: center;
-                  }
-          
-                  .header h1 {
-                      font-size: 20px;
-                  }
-          
-                  .image {
-                      height: 230px;
-                  }
-          
-                  .main {
-                      display: flex;
-                      gap: 50px
-                  }
-          
-                  .image {
-                      width: 100%;
-                  }
-              }
-          </style>
-          
-          <body>
+            <body>
               <main>
-                  <header class="header">
-                      <h1>FUTURE FORTE</h1>
-                  </header>
-                  <!-- job opport -->
-                  <section class="job">
-                      <div class="text">
-                          <h2>Find the latest <br> Job Opportunities</h2>
-                          <small>Get ready to elevate your career with our curated list of job openings that match your skills and
-                              interests.</small>
-                          <a href="${CLIENT_URL}/job" style="background-color:black; font-weight: 500; color:white">Search</a>
-                      </div>
-                  </section>
+                <header class="header">
+                  <h1 class="site-name">FUTURE FORTE</h1>
+                </header>
+                <!-- job opport -->
+                <section class="job">
+                  <div class="text">
+                    <h2>
+                      Find the latest <br />
+                      Job Opportunities
+                    </h2>
+                    <small
+                      >Get ready to elevate your career with our curated list of job
+                      openings that match your skills and interests.</small
+                    >
+                    <a
+                      href="${CLIENT_URL}/job"
+                      style="background-color: #153448; font-weight: 500; color: white"
+                      >Search</a
+                    >
+                  </div>
+                </section>
           
-                  <!-- scholarship opport -->
-                  <section class="scholarship" style="background-color: black; color: white;">
-                      <div class="text">
-                          <h2>Find the latest <br>Scholarship Opportunities</h2>
-                          <small>Explore our selected scholarships that can help alleviate the financial burden of your academic
-                              pursuit</small>
-                          <a href="${CLIENT_URL}/job" style="background-color:white; font-weight: 500; color:black">Search</a>
-                      </div>
-                  </section>
+                <!-- scholarship opport -->
+                <section
+                  class="scholarship"
+                  style="background-color: #153448; color: white"
+                >
+                  <div class="text">
+                    <h2 style="color:white">Find the latest <br />Scholarship Opportunities</h2>
+                    <small
+                      >Explore our selected scholarships that can help alleviate the
+                      financial burden of your academic pursuit</small
+                    >
+                    <a
+                      href="${CLIENT_URL}/job"
+                      style="background-color: white; font-weight: 500; color: black"
+                      >Search</a
+                    >
+                  </div>
+                </section>
           
-                  <!-- career opport -->
-                  <section class="career">
-                      <div class="text">
-                          <h2 style="color:black">Read Inspiring Career Guidance Articles</h2>
-                          <small style="color:black">Explore resources that are designed to provide insights and expert advice to
-                              help you make
-                              decisions</small>
-                          <a href="${CLIENT_URL}/job" style="background-color:black; font-weight: 500; color:white">Search</a>
-                      </div>
-                  </section>
+                <!-- career opport -->
+                <section class="career">
+                  <div class="text">
+                    <h2 style="color: black">
+                      Read Inspiring <br />
+                      Career Guidance Articles
+                    </h2>
+                    <small style="color: black"
+                      >Explore resources that are designed to provide insights and expert
+                      advice to help you make decisions</small
+                    >
+                    <a
+                      href="${CLIENT_URL}/job"
+                      style="background-color: #153448; font-weight: 500; color: white"
+                      >Search</a
+                    >
+                  </div>
+                </section>
           
-                  <section
-                      style="background-color: black; color:white; padding:14px; height: 200px;display: flex; align-items: center; justify-content: center;">
-                      <a href="${CLIENT_URL}/unsubscribe" style="color: white; text-align: center; ">Click to Unsubscribe</a>
-                  </section>
+                <section
+                  style="
+                    background-color: #153448;
+                    color: white;
+                    padding: 14px;
+                    height: 200px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <a
+                    href="${CLIENT_URL}/unsubscribe"
+                    style="color: white; text-align: center"
+                    >Click to Unsubscribe</a
+                  >
+                </section>
               </main>
-          </body>
-          
+            </body>
           </html>`
         );
         return subscriber;
@@ -279,123 +307,14 @@ class SubscriberService {
       receipients.map((rec) => {
         address.push(rec.email);
       });
-      const response = await sendMailNotify(
-        address,
-        subject,
-        `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Future Forte</title>
-        </head>
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wgh@100..900&display=swap');
-            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-        
-            * {
-                padding: 0;
-                margin: 0;
-            }
-        
-            body {
-                background-color: #f9f9f7;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                font-family: 'Inter', sans-serif;
-                font-optical-sizing: auto;
-                font-weight: 500;
-                font-style: normal;
-                font-variation-settings: "slnt" 0;
-            }
-        
-            main {
-                height: 100svh;
-                width: 100%;
-                max-width: 50%;
-            }
-        
-            .site-name {
-                font-family: 'Bebas', sans-serif;
-                font-size: 50px;
-            }
-        
-            .header {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background-color: rgb(64, 59, 121);
-                color: white;
-                padding: 15px;
-            }
-        
-            .header h1 {
-                font-size: 25px;
-                font-family: 'Bebas Neue', sans-serif;
-                font-weight: 400;
-                font-style: normal;
-            }
-        
-            @media only screen and (max-width:480px) {
-        
-                .header h1 {
-                    font-size: 5px;
-                }
-        
-                .main {
-                    display: flex;
-                    gap: 50px
-                }
-        
-                .site-name {
-                    font-size: 25px;
-                }
-        
-                .footer {
-                    height: 200px;
-                }
-            }
-        
-            @media only screen and (max-width:768px) {
-        
-                .header h1 {
-                    font-size: 20px;
-                }
-        
-                .main {
-                    display: flex;
-                    gap: 50px
-                }
-            }
-        </style>
-        <body>
-            <main>
-                <header class="header">
-                    <h1>FUTURE FORTE</h1>
-                </header>
-        
-                <section style="height: auto;">
-                    <div style="text-align: justify; padding: 8px;">${message}</div>
-                </section>
-        
-                <section
-                    style=" background-color:rgb(64, 59, 121); color:white; padding:14px; height: 200px;display: flex; align-items: center; justify-content: center;">
-                    <a href="${CLIENT_URL}/unsubscribe" style="color: white; text-align: center; ">Click to Unsubscribe</a>
-                </section>
-            </main>
-        </body>
-        </html>`
-      );
-      await this.database.notifySubscribers({
+      const response = await sendMailNotify(address, subject, message);
+      const details = {
         id: nanoid(),
         subject: response.subject,
         message: message,
         receiver: "To All Subscribers",
-        messageId: response.messageId,
-      });
+      };
+      await this.database.notifySubscribers(details);
       if (response.sent) {
         return { sent: true };
       } else {

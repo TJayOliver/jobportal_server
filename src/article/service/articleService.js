@@ -35,12 +35,7 @@ class ArticleService {
 
   async countArticleService() {
     try {
-      const article = await this.database.countArticle();
-      let count = "";
-      article.map((newData) => {
-        const number = Object.values(newData);
-        count += number;
-      });
+      const count = await this.database.countArticle();
       return count;
     } catch (error) {
       console.error("service {count article}:", error.message);

@@ -1,22 +1,9 @@
-import { executeQuery } from "../../../configuration/mysql.config.js";
+import { articleModel } from "../../../schema/mongoSchema.js";
 
 class ArticleDatabase {
   async createArticle(articleData) {
     try {
-      const query = `INSERT INTO articles
-            (id,image,author,title,post,featured,mainfeatured, category)
-            VALUES(?,?,?,?,?,?,?,?)`;
-      const parameter = [
-        articleData.id,
-        articleData.image,
-        articleData.author,
-        articleData.title,
-        articleData.post,
-        articleData.featured,
-        articleData.mainfeatured,
-        articleData.category,
-      ];
-      const article = await executeQuery(query, parameter);
+      const article = await articleModel.create(articleData);
       return article;
     } catch (error) {
       throw error;
@@ -25,8 +12,7 @@ class ArticleDatabase {
 
   async countArticle() {
     try {
-      const query = `SELECT COUNT (id) FROM articles`;
-      const article = await executeQuery(query);
+      const article = await articleModel.countDocuments();
       return article;
     } catch (error) {
       throw error;
@@ -35,13 +21,7 @@ class ArticleDatabase {
 
   async readAllArticles() {
     try {
-      const query = `SELECT *,
-            DATE_FORMAT(datecreated, '%d/%m/%y') 
-            AS datecreated 
-            FROM articles 
-            ORDER BY datecreated 
-            DESC`;
-      const articles = await executeQuery(query);
+      const articles = await articleModel.find();
       return articles;
     } catch (error) {
       throw error;
@@ -50,12 +30,7 @@ class ArticleDatabase {
 
   async readArticleById(articleID) {
     try {
-      const query = `
-            SELECT *, 
-            DATE_FORMAT(datecreated, '%d/%M/%Y') AS datecreated 
-            FROM articles WHERE id=?`;
-      const parameter = [articleID];
-      const article = await executeQuery(query, parameter);
+      const article = await articleModel.findOne({ id: articleID });
       return article;
     } catch (error) {
       throw error;
@@ -64,13 +39,7 @@ class ArticleDatabase {
 
   async readArticleByCategory(articlecategory) {
     try {
-      const query = `SELECT *, 
-            DATE_FORMAT(datecreated, '%d/%m/%y') AS datecreated 
-            FROM articles 
-            WHERE category=? 
-            LIMIT 4`;
-      const parameter = [articlecategory];
-      const article = await executeQuery(query, parameter);
+      const article = await articleModel.find({ category: articlecategory });
       return article;
     } catch (error) {
       throw error;
@@ -79,14 +48,9 @@ class ArticleDatabase {
 
   async readFeaturedArticle(articleValue) {
     try {
-      const query = `SELECT *,
-            DATE_FORMAT(datecreated, '%d/%m/%y') 
-            AS datecreated 
-            FROM articles 
-            WHERE featured=? 
-            LIMIT 3`;
-      const parameter = [articleValue];
-      const article = await executeQuery(query, parameter);
+      const article = await articleModel
+        .find({ featured: articleValue })
+        .sort({ title: -1 });
       return article;
     } catch (error) {
       throw error;
@@ -95,12 +59,7 @@ class ArticleDatabase {
 
   async readMainFeaturedArticle(articleValue) {
     try {
-      const query = `SELECT *,
-            DATE_FORMAT(datecreated, '%d/%m/%y') AS datecreated FROM articles 
-            WHERE mainfeatured=? 
-            LIMIT 1`;
-      const parameter = [articleValue];
-      const article = await executeQuery(query, parameter);
+      const article = await articleModel.find({ mainfeatured: articleValue });
       return article;
     } catch (error) {
       throw error;
@@ -109,9 +68,7 @@ class ArticleDatabase {
 
   async editArticle(articleID) {
     try {
-      const query = `SELECT * FROM articles WHERE id=?`;
-      const parameter = [articleID];
-      const article = await executeQuery(query, parameter);
+      const article = await articleModel.find({ id: articleID });
       return article;
     } catch (error) {
       throw error;
@@ -120,26 +77,18 @@ class ArticleDatabase {
 
   async updateArticle(articleData) {
     try {
-      const query = `
-            UPDATE articles 
-            SET 
-            image=?, 
-            title=?, 
-            post=?, 
-            featured=?, 
-            mainfeatured=?, 
-            category=? 
-            WHERE id=?`;
-      const parameter = [
-        articleData.image,
-        articleData.title,
-        articleData.post,
-        articleData.featured,
-        articleData.mainfeatured,
-        articleData.category,
-        articleData.id,
-      ];
-      const article = await executeQuery(query, parameter);
+      const id = articleData?.id;
+      const { image, title, post, featured, mainfeatured, category } =
+        articleData;
+      const update = {
+        image,
+        title,
+        post,
+        featured,
+        mainfeatured,
+        category,
+      };
+      const article = await articleModel.updateOne({ id: id }, update);
       return article;
     } catch (error) {
       throw error;
@@ -148,9 +97,7 @@ class ArticleDatabase {
 
   async deleteArticle(articleID) {
     try {
-      const query = `DELETE FROM articles WHERE id=?`;
-      const parameter = [articleID];
-      const article = await executeQuery(query, parameter);
+      const article = await articleModel.deleteOne({ id: articleID });
       return article;
     } catch (error) {
       throw error;

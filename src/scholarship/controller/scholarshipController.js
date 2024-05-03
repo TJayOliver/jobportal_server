@@ -137,7 +137,7 @@ class ScholarshipController {
         message: "Successfully Retrieved",
         callCookie,
         country,
-        data: scholarship,
+        data: [scholarship],
       });
     } catch (error) {
       console.error("controller {read scholarship by id}:", error.message);
@@ -153,7 +153,7 @@ class ScholarshipController {
       );
       return res
         .status(201)
-        .json({ message: "Successfully Retrieved", data: scholarship });
+        .json({ message: "Successfully Retrieved", data: [scholarship] });
     } catch (error) {
       console.error("controller {read scholarship by country}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });

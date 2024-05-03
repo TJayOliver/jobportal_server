@@ -16,7 +16,6 @@ class JobController {
         location,
         responsibility,
         requirements,
-        qualification,
         author,
         jobcategory,
       } = req.body;
@@ -33,7 +32,6 @@ class JobController {
         location,
         responsibility,
         requirements,
-        qualification,
         author,
         jobcategory,
       };
@@ -110,7 +108,7 @@ class JobController {
         message: "Successfully retrieved",
         callCookie,
         country,
-        data: job,
+        data: [job],
       });
     } catch (error) {
       console.error("read job by id {service}:", error.message);
@@ -142,7 +140,7 @@ class JobController {
       const job = await this.service.editJobService(id);
       return res
         .status(201)
-        .json({ message: "Successfully Update", data: job });
+        .json({ message: "Successfully Retrieved", data: job });
     } catch (error) {
       console.error("edit job {controller}:", error.message);
       res.status(500).json({ message: "Internal Server Error" });
@@ -163,7 +161,6 @@ class JobController {
         location,
         responsibility,
         requirements,
-        qualification,
         jobcategory,
       } = req.body;
       const image = req.file.filename;
@@ -180,7 +177,6 @@ class JobController {
         location,
         responsibility,
         requirements,
-        qualification,
         jobcategory,
       };
       const job = await this.service.updateJobService(jobDetails);

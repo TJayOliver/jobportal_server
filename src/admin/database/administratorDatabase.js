@@ -1,24 +1,9 @@
-import { executeQuery } from "../../../configuration/mysql.config.js";
+import { adminModel } from "../../../schema/mongoSchema.js";
 
 class AdministratorDatabase {
-  async createAdmin(adminDetails) {
+  async createAdmin(details) {
     try {
-      const query = `INSERT INTO 
-            administrator(id, name, username, password, image, twitter, facebook, linkedin, role) 
-            VALUES(?,?,?,?,?,?,?,?,?)`;
-      const parameter = [
-        adminDetails.id,
-        adminDetails.name,
-        adminDetails.username,
-        adminDetails.password,
-        adminDetails.image,
-        adminDetails.twitter,
-        adminDetails.facebook,
-        adminDetails.linkedin,
-        adminDetails.role,
-      ];
-
-      const admin = await executeQuery(query, parameter);
+      const admin = await adminModel.create(details);
       return admin;
     } catch (error) {
       throw error;
@@ -27,8 +12,7 @@ class AdministratorDatabase {
 
   async getAdmin() {
     try {
-      const query = `SELECT * FROM administrator`;
-      const admin = await executeQuery(query);
+      const admin = await adminModel.find();
       return admin;
     } catch (error) {
       throw error;
@@ -37,9 +21,7 @@ class AdministratorDatabase {
 
   async getAdminByUsername(username) {
     try {
-      const query = `SELECT * FROM administrator WHERE username=?`;
-      const parameter = [username];
-      const admin = await executeQuery(query, parameter);
+      const admin = await adminModel.findOne({ username: username });
       return admin;
     } catch (error) {
       throw error;
@@ -48,9 +30,10 @@ class AdministratorDatabase {
 
   async getAdminByName(name) {
     try {
-      const query = `SELECT image, linkedin, facebook, twitter FROM administrator WHERE name=?`;
-      const parameter = [name];
-      const admin = await executeQuery(query, parameter);
+      const admin = await adminModel.findOne(
+        { name: name },
+        { image: 1, linkedin: 1, facebook: 1, twitter: 1 }
+      );
       return admin;
     } catch (error) {
       throw error;
@@ -59,9 +42,7 @@ class AdministratorDatabase {
 
   async getAdminByID(id) {
     try {
-      const query = `SELECT * FROM administrator WHERE id=?`;
-      const parameter = [id];
-      const admin = await executeQuery(query, parameter);
+      const admin = await adminModel.findOne({ id: id });
       return admin;
     } catch (error) {
       throw error;
@@ -70,25 +51,11 @@ class AdministratorDatabase {
 
   async deleteAdmin(id) {
     try {
-      const query = `DELETE FROM administrator WHERE id=?`;
-      const parameter = [id];
-      const admin = await executeQuery(query, parameter);
-      return admin;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async checkSessionByID(id) {
-    try {
-      const query = `SELECT * FROM sessions WHERE id=?`;
-      const parameter = [id];
-      const admin = await executeQuery(query, parameter);
+      const admin = await adminModel.deleteOne({ id: id });
       return admin;
     } catch (error) {
       throw error;
     }
   }
 }
-
 export default AdministratorDatabase;

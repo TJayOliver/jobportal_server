@@ -6,7 +6,16 @@ class AdministratorService {
     this.database = database;
   }
 
-  async createAdminService({ name, username, password, image }) {
+  async createAdminService({
+    name,
+    username,
+    password,
+    image,
+    twitter,
+    linkedin,
+    facebook,
+    role,
+  }) {
     const saltRounds = 10;
     try {
       const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -19,6 +28,7 @@ class AdministratorService {
         twitter,
         facebook,
         linkedin,
+        role,
       };
       const admin = await this.database.createAdmin(adminDetails);
       return admin;

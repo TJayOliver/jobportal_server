@@ -35,7 +35,7 @@ export const sendMailNotify = async (receiver, subject, body) => {
       bcc: receiver,
       replyTo: "<no-reply@futureforte.com",
       subject: subject,
-      html: body,
+      text: `${body} ${unsubscribe}`,
     });
     console.log("Mail sent");
     return {

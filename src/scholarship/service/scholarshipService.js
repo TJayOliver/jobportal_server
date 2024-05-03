@@ -1,5 +1,5 @@
-import { myCache, cacheTime } from "../../../configuration/cache.config.js";
 import { nanoid } from "nanoid";
+import { myCache, cacheTime } from "../../../configuration/cache.config.js";
 
 class ScholarshipService {
   constructor(database) {
@@ -59,12 +59,7 @@ class ScholarshipService {
 
   async countScholarshipService() {
     try {
-      const scholarshipCount = await this.database.countScholarship();
-      let count = "";
-      scholarshipCount.map((newData) => {
-        const number = Object.values(newData);
-        count += number;
-      });
+      const count = await this.database.countScholarship();
       return count;
     } catch (error) {
       console.error("count scholarship {service}:", error.message);

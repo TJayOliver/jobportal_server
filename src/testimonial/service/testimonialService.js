@@ -7,7 +7,7 @@ class TestimonialService {
 
   async createTestimonialService({ name, image, quote, position, author }) {
     const details = {
-      id: nanoid(10),
+      id: nanoid(),
       name: name,
       image: image,
       quote: quote,

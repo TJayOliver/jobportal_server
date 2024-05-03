@@ -4,6 +4,9 @@ import bodyparser from "body-parser";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import passport from "passport";
+import session from "express-session";
+import mongodbStore from "connect-mongodb-session";
 import articleRouter from "./src/article/router/articleRouter.js";
 import administratorRouter from "./src/admin/router/adminstratorRouter.js";
 import scholarshipRouter from "./src/scholarship/router/scholarshipRouter.js";
@@ -11,12 +14,11 @@ import subscriberRouter from "./src/subscribers/router/subscriberRouter.js";
 import jobRouter from "./src/job/router/jobRouter.js";
 import categoryRouter from "./src/category/router/categoryRouter.js";
 import testimonialRouter from "./src/testimonial/router/testimonialRouter.js";
-import passport from "passport";
-import session from "express-session";
-import mysqlStore from "express-mysql-session";
 import userLimiter from "./configuration/rateLimiter.js";
 import cookieRouter from "./src/cookies/router/cookieRouter.js";
 import { retrieveToken } from "./configuration/tokens.js";
+import { connectMongoDB } from "./configuration/mongodb.config.js";
+import compression from "compression";
 
 const app = express();
 
@@ -30,19 +32,18 @@ app.use("/upload", express.static("./upload"));
 app.use(cookieParser());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
+app.use(compression());
 
 app.use(retrieveToken);
 
-const factory = mysqlStore(session);
-const options = {
-  host: process.env.HOST,
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
-  checkExpirationInterval: 60 * 60 * 1000,
-  expiration: 60 * 60 * 1000,
-};
-const sessionStore = new factory(options);
+const factory = mongodbStore(session);
+
+const sessionStore = new factory({
+  uri: process.env.MONGODB_URL,
+});
+sessionStore.on("error", (error) => {
+  console.log(error);
+});
 
 app.use(
   session({
@@ -57,7 +58,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(userLimiter);
+// app.use(userLimiter);
 
 app.use(articleRouter);
 app.use(administratorRouter);
@@ -72,4 +73,5 @@ if (process.env.NODE_ENV === "production") {
   console.log = () => {};
 }
 
+connectMongoDB();
 app.listen(PORT, () => console.log(`Connected on http://localhost:${PORT}`));

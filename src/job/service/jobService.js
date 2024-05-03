@@ -1,5 +1,5 @@
-import { myCache, cacheTime } from "../../../configuration/cache.config.js";
 import { nanoid } from "nanoid";
+import { myCache, cacheTime } from "../../../configuration/cache.config.js";
 
 class JobService {
   constructor(database) {
@@ -18,7 +18,6 @@ class JobService {
     location,
     responsibility,
     requirements,
-    qualification,
     author,
     jobcategory,
   }) {
@@ -36,7 +35,6 @@ class JobService {
         location,
         responsibility,
         requirements,
-        qualification,
         author,
         jobcategory,
       };
@@ -49,12 +47,7 @@ class JobService {
 
   async countJobService() {
     try {
-      let job = "";
-      const jobs = await this.database.countJob();
-      jobs.map((newData) => {
-        const counter = Object.values(newData);
-        job += counter;
-      });
+      const job = await this.database.countJob();
       return job;
     } catch (error) {
       console.error("count job {service}:", error.message);
@@ -140,7 +133,6 @@ class JobService {
     location,
     responsibility,
     requirements,
-    qualification,
     jobcategory,
   }) {
     try {
@@ -157,7 +149,6 @@ class JobService {
         location,
         responsibility,
         requirements,
-        qualification,
         jobcategory,
       };
       const job = await this.database.updateJob(jobDetails);

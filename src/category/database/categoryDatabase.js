@@ -1,87 +1,77 @@
-import {executeQuery} from '../../../configuration/mysql.config.js';
+import { categoryModel } from "../../../schema/mongoSchema.js";
 
 class CategoryDatabase {
-
-    async createCategory (categoryDetails) {
-        try {
-            const query = `INSERT INTO category (id, categoryname) VALUES(?,?)`;
-            const parameter = [
-                categoryDetails.id, 
-                categoryDetails.categoryname
-            ];
-            const category = await executeQuery(query, parameter);
-            return category;
-        } catch (error) {
-            throw error;
-        }
+  async createCategory(categoryDetails) {
+    try {
+      const category = await categoryModel.create(categoryDetails);
+      return category;
+    } catch (error) {
+      throw error;
     }
+  }
 
-    async countCategory () {
-        try {
-            const query = `SELECT COUNT(id) FROM category`;
-            const category = await executeQuery(query);
-            return category;
-        } catch (error) {
-            throw error
-        }
+  async countCategory() {
+    try {
+      const category = await categoryModel.countDocuments();
+      return category;
+    } catch (error) {
+      throw error;
     }
+  }
 
-    async readAllCategory () {
-        try {
-            const query = `SELECT * FROM category`;
-            const category = await executeQuery(query);
-            return category;
-        } catch (error) {
-            throw error;
-        }
+  async readAllCategory() {
+    try {
+      const category = await categoryModel.find().sort({ categoryname: 1 });
+      return category;
+    } catch (error) {
+      throw error;
     }
+  }
 
-    async readCategoryByName (categoryname) {
-        try {
-            const query = `SELECT categoryname FROM category WHERE categoryname=?`;
-            const parameter = [categoryname];
-            const category = await executeQuery(query, parameter);
-            return category;
-        } catch (error) {
-            throw error;
-        }
+  async readCategoryByName(categoryname) {
+    try {
+      const category = await categoryModel.findOne({
+        categoryname: categoryname,
+      });
+      return category;
+    } catch (error) {
+      throw error;
     }
+  }
 
-    async editCategory (id) {
-        try {
-            const query = `SELECT * FROM category WHERE id=?`;
-            const parameter = [id];
-            const category = await executeQuery(query, parameter);
-            return category;
-        } catch (error) {
-            throw error
-        }
+  async editCategory(id) {
+    try {
+      const category = await categoryModel.find({
+        id: id,
+      });
+      return category;
+    } catch (error) {
+      throw error;
     }
+  }
 
-    async updateCategory (categoryDetails) {
-        try {
-            const query = `UPDATE category SET categoryname=? WHERE id=?`;
-            const parameter = [
-                categoryDetails.categoryname,
-                categoryDetails.id
-            ];
-            const category = await executeQuery(query, parameter);
-            return category;
-        } catch (error) {
-            throw error
-        }
+  async updateCategory(categoryDetails) {
+    try {
+      const id = categoryDetails?.id;
+      const { categoryname } = categoryDetails;
+      const update = { categoryname };
+      const category = await categoryModel.updateOne({ id: id }, update);
+      return category;
+    } catch (error) {
+      throw error;
     }
+  }
 
-    async deleteCategory (id) {
-        try {
-            const query = `DELETE FROM category WHERE id=?`;
-            const parameter = [id];
-            const category = await executeQuery(query, parameter);
-            return category;
-        } catch (error) {
-            throw error;
-        }
+  async deleteCategory(id) {
+    try {
+      const category = await categoryModel.deleteOne({
+        id: id,
+      });
+      return category;
+    } catch (error) {
+      throw error;
     }
+  }
 }
 
 export default CategoryDatabase;

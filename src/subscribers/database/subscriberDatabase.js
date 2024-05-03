@@ -1,11 +1,12 @@
-import { executeQuery } from "../../../configuration/mysql.config.js";
+import {
+  mailMessagesModel,
+  subscribersModel,
+} from "../../../schema/mongoSchema.js";
 
 class SubscriberDatabase {
   async createSubscriber(subsciberDetails) {
     try {
-      const query = `INSERT INTO subscribers (id, email) VALUES (?, ?)`;
-      const parameter = subsciberDetails;
-      const subscriber = await executeQuery(query, parameter);
+      const subscriber = await subscribersModel.create(subsciberDetails);
       return subscriber;
     } catch (error) {
       throw error;
@@ -14,8 +15,7 @@ class SubscriberDatabase {
 
   async readSubscriber() {
     try {
-      const query = `SELECT * FROM subscribers`;
-      const subscriber = await executeQuery(query);
+      const subscriber = await subscribersModel.find();
       return subscriber;
     } catch (error) {
       throw error;
@@ -24,8 +24,7 @@ class SubscriberDatabase {
 
   async readSubscriberEmail() {
     try {
-      const query = `SELECT email FROM subscribers`;
-      const subscriber = await executeQuery(query);
+      const subscriber = await subscribersModel.find().select({ email: 1 });
       return subscriber;
     } catch (error) {
       throw error;
@@ -34,9 +33,7 @@ class SubscriberDatabase {
 
   async checkSubscriber(email) {
     try {
-      const query = `SELECT * FROM subscribers WHERE email=?`;
-      const parameter = [email];
-      const subscriber = await executeQuery(query, parameter);
+      const subscriber = await subscribersModel.find({ email: email });
       return subscriber;
     } catch (error) {
       throw error;
@@ -45,20 +42,16 @@ class SubscriberDatabase {
 
   async unSubscribe(email) {
     try {
-      const query = `DELETE FROM subscribers WHERE email=?`;
-      const parameter = [email];
-      const subscriber = await executeQuery(query, parameter);
+      const subscriber = await subscribersModel.deleteOne({ email: email });
       return subscriber;
     } catch (error) {
       throw error;
     }
   }
 
-  async notifySubscribers({ id, subject, receiver, message, messageId }) {
+  async notifySubscribers(details) {
     try {
-      const query = `INSERT INTO mailmessages (id, subject, receiver, message, messageId) VALUES(?,?,?,?,?)`;
-      const parameter = [id, subject, receiver, message, messageId];
-      const subscriber = await executeQuery(query, parameter);
+      const subscriber = await mailMessagesModel.create(details);
       return subscriber;
     } catch (error) {
       throw error;
@@ -67,8 +60,7 @@ class SubscriberDatabase {
 
   async readMessages() {
     try {
-      const query = `SELECT * FROM mailmessages`;
-      const message = await executeQuery(query);
+      const message = await mailMessagesModel.find();
       return message;
     } catch (error) {
       throw error;
@@ -77,8 +69,7 @@ class SubscriberDatabase {
 
   async deleteMessages() {
     try {
-      const query = `DELETE FROM mailmessages`;
-      const message = await executeQuery(query);
+      const message = await mailMessagesModel.deleteMany({});
       return message;
     } catch (error) {
       throw error;
