@@ -14,7 +14,6 @@ import subscriberRouter from "./src/subscribers/router/subscriberRouter.js";
 import jobRouter from "./src/job/router/jobRouter.js";
 import categoryRouter from "./src/category/router/categoryRouter.js";
 import testimonialRouter from "./src/testimonial/router/testimonialRouter.js";
-import userLimiter from "./configuration/rateLimiter.js";
 import cookieRouter from "./src/cookies/router/cookieRouter.js";
 import { retrieveToken } from "./configuration/tokens.js";
 import { connectMongoDB } from "./configuration/mongodb.config.js";
