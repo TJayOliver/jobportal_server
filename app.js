@@ -69,6 +69,10 @@ app.use(categoryRouter);
 app.use(testimonialRouter);
 app.use(cookieRouter);
 
+app.get("/", (req, res) => {
+  res.send("Is working");
+});
+
 if (process.env.NODE_ENV === "production") {
   console.log = () => {};
 }
