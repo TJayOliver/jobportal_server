@@ -23,10 +23,7 @@ const app = express();
 
 const PORT = process.env.PORT || "4040";
 
-app.use(cors({
-  origin: 'https://futureforte.netlify.app',
-  optionsSuccessStatus: 200 
-}));
+app.use(cors());
 
 app.use(morgan("prod"));
 
@@ -75,9 +72,6 @@ app.get("/", (req, res) => {
   res.send("Is working");
 });
 
-if (process.env.NODE_ENV === "production") {
-  console.log = () => {};
-}
 
 connectMongoDB();
 app.listen(PORT, () => console.log(`Connected on http://localhost:${PORT}`));
