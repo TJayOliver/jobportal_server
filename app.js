@@ -21,7 +21,7 @@ import compression from "compression";
 
 const app = express();
 
-const PORT = process.env.PORT || "4040";
+const PORT = process.env.PORT;
 
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
@@ -75,4 +75,4 @@ app.get("/", (req, res) => {
 
 
 connectMongoDB();
-app.listen(PORT, () => console.log(`Connected on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Connected on ${PORT}`));
