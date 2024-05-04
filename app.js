@@ -34,7 +34,10 @@ const corsOptions = {
   }
 }
  
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: 'https://futureforte.netlify.app',
+  optionsSuccessStatus: 200 
+}));
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 app.use(morgan("prod"));
 
