@@ -38,7 +38,7 @@ app.use(cors({
   origin: 'https://futureforte.netlify.app',
   optionsSuccessStatus: 200 
 }));
-app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
+app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" }, contentSecurityPolicy: false, }));
 app.use(morgan("prod"));
 
 app.use("/upload", express.static("./upload"));
