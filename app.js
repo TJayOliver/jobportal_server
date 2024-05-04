@@ -47,7 +47,7 @@ sessionStore.on("error", (error) => {
 app.use(
   session({
     key: "_u",
-    secret: process.env.SK_KEY1,
+    secret: process.env.SESSION_KEY,
     resave: false,
     saveUninitialized: false,
     store: sessionStore,
