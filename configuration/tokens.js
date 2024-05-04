@@ -21,7 +21,7 @@ export const retrieveToken = async (req, res, next) => {
 
 export const verifyToken = async (cookie) => {
   try {
-    const decoded = jwt.decode(cookie, process.env._c);
+    const decoded = jwt.decode(cookie, process.env.SK_KEY2);
     if (decoded) {
       const country = decoded.country;
       return { country: country };
