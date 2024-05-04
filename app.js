@@ -34,7 +34,7 @@ const corsOptions = {
   }
 }
  
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 app.use(morgan("prod"));
 
