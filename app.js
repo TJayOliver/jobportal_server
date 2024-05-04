@@ -23,7 +23,7 @@ const app = express();
 
 const PORT = process.env.PORT || "4040";
 
-const whitelist = [process.env.CLIENT_URL]
+const whitelist = ['https://futureforte.netlify.app']
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -34,8 +34,8 @@ const corsOptions = {
   }
 }
  
-//app.use(cors(corsOptions));
-//app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
+app.use(cors(corsOptions));
+app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 app.use(morgan("prod"));
 
 app.use("/upload", express.static("./upload"));
