@@ -70,7 +70,7 @@ app.use(testimonialRouter);
 app.use(cookieRouter);
 
 app.get("/", (req, res) => {
-  res.send("Is working");
+  res.send(`Is working on port ${PORT}`);
 });
 
 
