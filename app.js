@@ -26,7 +26,7 @@ const PORT = process.env.PORT || "4040";
 
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
-app.use(morgan("dev"));
+app.use(morgan("prod"));
 
 app.use("/upload", express.static("./upload"));
 app.use(cookieParser());
