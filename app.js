@@ -23,7 +23,18 @@ const app = express();
 
 const PORT = process.env.PORT || "4040";
 
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+const whitelist = [process.env.CLIENT_URL]
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+ 
+app.use(cors(corsOptions));
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 app.use(morgan("prod"));
 
