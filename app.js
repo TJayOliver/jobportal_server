@@ -34,8 +34,8 @@ const corsOptions = {
   }
 }
  
-//app.use(cors(corsOptions));
-app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
+app.use(cors(corsOptions));
+//app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 app.use(morgan("prod"));
 
 app.use("/upload", express.static("./upload"));
