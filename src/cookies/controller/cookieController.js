@@ -12,7 +12,7 @@ const userConsent = async (req, res) => {
       }
       if (getUserLocation && getUserLocation.obtained) {
         const country = getUserLocation.country;
-        const token = jwt.sign({ country: country }, process.env._c, {
+        const token = jwt.sign({ country: country }, process.env.COOKIE_KEY, {
           expiresIn: "1yr",
         });
         res.cookie("_c", token, {
