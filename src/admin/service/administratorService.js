@@ -81,15 +81,6 @@ class AdministratorService {
       console.error("delete admin {service}:", error.message);
     }
   }
-
-  async checkSessionByIDService(id) {
-    try {
-      const admin = await this.database.checkSessionByID(id);
-      return admin;
-    } catch (error) {
-      console.error("check session {service}:", error.message);
-    }
-  }
 }
 
 export default AdministratorService;

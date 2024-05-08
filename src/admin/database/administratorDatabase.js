@@ -49,15 +49,6 @@ class AdministratorDatabase {
     }
   }
 
-  async checkSessionByID(id) {
-    try {
-      const admin = await adminModel.findOne({ id: id });
-      return admin;
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async deleteAdmin(id) {
     try {
       const admin = await adminModel.deleteOne({ id: id });

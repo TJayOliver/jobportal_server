@@ -53,7 +53,6 @@ class AdministratorController {
     const { id } = req.params;
     try {
       if (!id) res.status(401).json({ status: false });
-      if (!req.session) res.status(401).json({ status: false });
       const admin = await this.service.getAdminByIDService(id);
       return res.status(201).json({ status: true, data: admin });
     } catch (error) {
@@ -76,9 +75,6 @@ class AdministratorController {
   async deleteAdmin(req, res) {
     const { id } = req.params;
     try {
-      const sessionID = req.session.id;
-      const data = await this.service.checkSessionByIDService(sessionID);
-      if (!data) return res.status(401).json({ status: false });
       const admin = await this.service.deleteAdminService(id);
       return res.status(201).json({ message: "Successfully Deleted", admin });
     } catch (error) {
