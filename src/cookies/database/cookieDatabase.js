@@ -2,8 +2,8 @@ import { userLocationModel } from "../../../schema/mongoSchema.js";
 
 export const saveUserLocation = async (location) => {
   try {
-    const { ipAddress, country, city } = location;
-    const details = { ipAddress, country, city };
+    const { id, ipAddress, country, city } = location;
+    const details = { id, ipAddress, country, city };
     const userLocation = await userLocationModel.create(details);
     return true;
   } catch (error) {

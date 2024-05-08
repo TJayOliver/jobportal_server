@@ -16,7 +16,7 @@ export const obtainUserLocation = async (ip) => {
       id: nanoid(),
       ipAddress: ip,
       country: getLocation.country,
-      city: getLocation.city,
+      city: getLocation.city || getLocation.country,
     };
     const data = await saveUserLocation(location);
     if (data) {

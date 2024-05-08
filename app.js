@@ -6,7 +6,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import session from "express-session";
-import mongodbStore from "connect-mongodb-session";
+import MongoStore from "connect-mongo";
 import articleRouter from "./src/article/router/articleRouter.js";
 import administratorRouter from "./src/admin/router/adminstratorRouter.js";
 import scholarshipRouter from "./src/scholarship/router/scholarshipRouter.js";
@@ -21,12 +21,12 @@ import compression from "compression";
 
 const app = express();
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 4040;
 
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(helmet({ crossOriginResourcePolicy: false }));
 
-app.use(morgan("prod"));
+app.use(morgan("tiny"));
 
 app.use("/upload", express.static("./upload"));
 app.use(cookieParser());
@@ -36,23 +36,16 @@ app.use(compression());
 
 app.use(retrieveToken);
 
-const factory = mongodbStore(session);
-
-const sessionStore = new factory({
-  uri: process.env.MONGODB_URL,
-});
-sessionStore.on("error", (error) => {
-  console.log(error);
-});
-
 app.use(
   session({
     key: "_u",
     secret: process.env.SESSION_KEY,
-    resave: false,
+    resave: true,
     saveUninitialized: false,
-    store: sessionStore,
     cookie: { secure: true, sameSite: "strict", maxAge: 60 * 60 * 1000 },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_ATLAS,
+    }),
   })
 );
 
@@ -73,6 +66,5 @@ app.get("/", (req, res) => {
   res.send(`Is working on port ${PORT}`);
 });
 
-
 connectMongoDB();
-app.listen(PORT, () => console.log(`Connected on ${PORT}`));
+app.listen(PORT, () => console.log(`Connected on Port: ${PORT}`));
