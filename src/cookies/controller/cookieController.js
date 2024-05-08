@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken";
 
 const userConsent = async (req, res) => {
   const { response } = req.body;
-  const ip = req.ip || req.connection.remoteAddress;
+  const ip =
+    req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   try {
     if (response === "OK") {
       const getUserLocation = await obtainUserLocation(ip);
