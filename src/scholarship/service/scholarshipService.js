@@ -8,6 +8,7 @@ class ScholarshipService {
 
   async createScholarshipService({
     image,
+    imagename,
     scholarshipname,
     deadline,
     description,
@@ -30,6 +31,7 @@ class ScholarshipService {
       const scholarshipData = {
         id: nanoid(),
         image,
+        imagename,
         scholarshipname,
         deadline,
         description,
@@ -160,6 +162,7 @@ class ScholarshipService {
   async updateScholarshipService({
     id,
     image,
+    imagename,
     scholarshipname,
     deadline,
     description,
@@ -182,6 +185,7 @@ class ScholarshipService {
       const scholarshipData = {
         id,
         image,
+        imagename,
         scholarshipname,
         deadline,
         description,

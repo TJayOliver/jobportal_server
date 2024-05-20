@@ -18,6 +18,7 @@ import cookieRouter from "./src/cookies/router/cookieRouter.js";
 import { retrieveToken } from "./configuration/tokens.js";
 import { connectMongoDB } from "./configuration/mongodb.config.js";
 import compression from "compression";
+import { firebaseApp } from "./configuration/firebase.js";
 
 const app = express();
 
@@ -29,7 +30,7 @@ app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(morgan("tiny"));
 app.enable("trust proxy");
 
-app.use("/upload", express.static("./upload"));
+//app.use("/upload", express.static("./upload"));
 app.use(cookieParser());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -63,9 +64,11 @@ app.use(categoryRouter);
 app.use(testimonialRouter);
 app.use(cookieRouter);
 
-app.get("/", (req, res) => {
-  res.send(`Is working on port ${PORT}`);
-});
+firebaseApp;
 
 connectMongoDB();
+
+if (process.env.NODE_ENV === "production") {
+  console.log = {};
+}
 app.listen(PORT, () => console.log(`Connected on Port: ${PORT}`));

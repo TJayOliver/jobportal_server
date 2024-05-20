@@ -99,6 +99,7 @@ class ScholarshipDatabase {
       const id = scholarshipData?.id;
       const {
         image,
+        imagename,
         scholarshipname,
         deadline,
         description,
@@ -118,6 +119,7 @@ class ScholarshipDatabase {
       } = scholarshipData;
       const update = {
         image,
+        imagename,
         scholarshipname,
         deadline,
         description,

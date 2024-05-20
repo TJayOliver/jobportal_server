@@ -34,9 +34,9 @@ class TestimonialDatabase {
   async updateTestimonial(details) {
     try {
       const id = details?.id;
-      const { name, image, quote, position } = details;
-      const update = { name, image, quote, position };
-      const testimonial = await testimonialModel.updateOne({ id: id });
+      const { name, image, imagename, quote, position } = details;
+      const update = { name, image, imagename, quote, position };
+      const testimonial = await testimonialModel.updateOne({ id: id }, update);
       return testimonial;
     } catch (error) {
       throw error;

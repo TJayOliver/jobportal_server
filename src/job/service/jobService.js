@@ -8,6 +8,7 @@ class JobService {
 
   async createJobService({
     image,
+    imagename,
     overview,
     salary,
     featured,
@@ -25,6 +26,7 @@ class JobService {
       const jobDetails = {
         id: nanoid(),
         image,
+        imagename,
         overview,
         salary,
         featured,
@@ -124,6 +126,7 @@ class JobService {
     id,
     overview,
     image,
+    imagename,
     salary,
     featured,
     company,
@@ -140,6 +143,7 @@ class JobService {
         id,
         overview,
         image,
+        imagename,
         salary,
         featured,
         company,

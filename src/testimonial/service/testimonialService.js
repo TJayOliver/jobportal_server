@@ -5,11 +5,19 @@ class TestimonialService {
     this.database = database;
   }
 
-  async createTestimonialService({ name, image, quote, position, author }) {
+  async createTestimonialService({
+    name,
+    image,
+    imagename,
+    quote,
+    position,
+    author,
+  }) {
     const details = {
       id: nanoid(),
       name: name,
       image: image,
+      imagename: imagename,
       quote: quote,
       position: position,
       author: author,

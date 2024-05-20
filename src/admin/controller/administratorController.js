@@ -1,25 +1,33 @@
+import {
+  storeToFirebase,
+  deleteFromFirebase,
+} from "../../../lib/storeFirebase.js";
+
 class AdministratorController {
   constructor(adminService) {
     this.service = adminService;
   }
 
   async createAdmin(req, res) {
+    const { name, username, password, role, twitter, facebook, linkedin } =
+      req.body;
+    const image = req.file;
     try {
-      const { name, username, password, role, twitter, facebook, linkedin } =
-        req.body;
-      const image = req.file.filename;
+      const imageName = image.originalname;
+      const imageUrl = await storeToFirebase(image);
       const adminDetails = {
         name,
         username,
         password,
-        image,
+        image: imageUrl,
+        imagename: imageName,
         twitter,
         facebook,
         linkedin,
         role,
       };
-      const admin = await this.service.createAdminService(adminDetails);
-      return res.status(201).json({ message: "Successfully Created", admin });
+      await this.service.createAdminService(adminDetails);
+      return res.status(201).json({ message: "Successfully Created" });
     } catch (error) {
       console.error("controller:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -75,10 +83,15 @@ class AdministratorController {
   async deleteAdmin(req, res) {
     const { id } = req.params;
     try {
-      const admin = await this.service.deleteAdminService(id);
-      return res.status(201).json({ message: "Successfully Deleted", admin });
+      const getImage = await this.service.getAdminByIDService(id);
+      const image = getImage.imagename;
+      const deletedImageFromFirebase = await deleteFromFirebase(image);
+      if (deletedImageFromFirebase) {
+        await this.service.deleteAdminService(id);
+        return res.status(201).json({ message: "Successfully Deleted" });
+      }
     } catch (error) {
-      console.error("controller:", error.message);
+      console.error("delete admin {controller}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }

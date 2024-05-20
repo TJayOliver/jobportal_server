@@ -92,6 +92,7 @@ class JobDatabase {
       const id = jobDetails?.id;
       const {
         image,
+        imagename,
         overview,
         salary,
         featured,
@@ -106,6 +107,7 @@ class JobDatabase {
       } = jobDetails;
       const update = {
         image,
+        imagename,
         overview,
         salary,
         featured,

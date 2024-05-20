@@ -1,32 +1,40 @@
+import {
+  storeToFirebase,
+  deleteFromFirebase,
+} from "../../../lib/storeFirebase.js";
+
 class ScholarshipController {
   constructor(scholarshipService) {
     this.service = scholarshipService;
   }
 
   async createScholarship(req, res) {
+    const {
+      scholarshipname,
+      deadline,
+      description,
+      eligibility,
+      duration,
+      programsoffered,
+      documentsrequired,
+      benefits,
+      applicationinformation,
+      hostuniversity,
+      agent,
+      featured,
+      scholarshiptype,
+      programs,
+      scholarshipcategory,
+      country,
+      author,
+    } = req.body;
+    const image = req.file;
     try {
-      const {
-        scholarshipname,
-        deadline,
-        description,
-        eligibility,
-        duration,
-        programsoffered,
-        documentsrequired,
-        benefits,
-        applicationinformation,
-        hostuniversity,
-        agent,
-        featured,
-        scholarshiptype,
-        programs,
-        scholarshipcategory,
-        country,
-        author,
-      } = req.body;
-      const image = req.file.filename;
+      const imageName = image.originalname;
+      const imageUrl = await storeToFirebase(image);
       const scholarshipData = {
-        image,
+        image: imageUrl,
+        imagename: imageName,
         scholarshipname,
         deadline,
         description,
@@ -45,12 +53,8 @@ class ScholarshipController {
         country,
         author,
       };
-      const scholarship = await this.service.createScholarshipService(
-        scholarshipData
-      );
-      return res
-        .status(201)
-        .json({ message: "Successfully Created", data: scholarship });
+      await this.service.createScholarshipService(scholarshipData);
+      return res.status(201).json({ message: "Successfully Created" });
     } catch (error) {
       console.error("controller {create scholarship}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -68,9 +72,9 @@ class ScholarshipController {
   }
 
   async readAllScholarships(req, res) {
+    const callCookie = res.locals.callCookie;
+    const country = res.locals.country;
     try {
-      const callCookie = res.locals.callCookie;
-      const country = res.locals.country;
       const scholarship = await this.service.readAllScholarshipService();
       return res.status(201).json({
         message: "Successfully retrieved",
@@ -113,8 +117,8 @@ class ScholarshipController {
   }
 
   async readScholarshipByCategory(req, res) {
+    const { scholarshipcategory } = req.params;
     try {
-      const { scholarshipcategory } = req.params;
       const scholarship = await this.service.readScholarshipByCategoryService(
         scholarshipcategory
       );
@@ -128,10 +132,10 @@ class ScholarshipController {
   }
 
   async readScholarshipByID(req, res) {
+    const callCookie = res.locals.callCookie;
+    const country = res.locals.country;
+    const { id } = req.params;
     try {
-      const callCookie = res.locals.callCookie;
-      const country = res.locals.country;
-      const { id } = req.params;
       const scholarship = await this.service.readScholarshipByIDService(id);
       return res.status(201).json({
         message: "Successfully Retrieved",
@@ -146,8 +150,8 @@ class ScholarshipController {
   }
 
   async readScholarshipByCountry(req, res) {
+    const { countryname } = req.params;
     try {
-      const { countryname } = req.params;
       const scholarship = await this.service.searchScholarshipByCountryService(
         countryname
       );
@@ -161,8 +165,8 @@ class ScholarshipController {
   }
 
   async searchScholarshipByCountry(req, res) {
+    const { country } = req.body;
     try {
-      const { country } = req.body;
       const scholarship = await this.service.searchScholarshipByCountryService(
         country
       );
@@ -179,8 +183,8 @@ class ScholarshipController {
   }
 
   async editScholarship(req, res) {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
       const scholarship = await this.service.editScholarshipService(id);
       return res
         .status(201)
@@ -192,53 +196,59 @@ class ScholarshipController {
   }
 
   async updateScholarship(req, res) {
+    const {
+      scholarshipname,
+      deadline,
+      scholarshiptype,
+      featured,
+      programs,
+      country,
+      description,
+      scholarshipcategory,
+      eligibility,
+      duration,
+      programsoffered,
+      documentsrequired,
+      benefits,
+      applicationinformation,
+      agent,
+      hostuniversity,
+    } = req.body;
+    const { id } = req.params;
+    const image = req.file;
     try {
-      const {
-        scholarshipname,
-        deadline,
-        scholarshiptype,
-        featured,
-        programs,
-        country,
-        description,
-        scholarshipcategory,
-        eligibility,
-        duration,
-        programsoffered,
-        documentsrequired,
-        benefits,
-        applicationinformation,
-        agent,
-        hostuniversity,
-      } = req.body;
-      const { id } = req.params;
-      const image = req.file.filename;
-      const scholarshipData = {
-        id,
-        scholarshipname,
-        deadline,
-        scholarshiptype,
-        featured,
-        programs,
-        country,
-        description,
-        scholarshipcategory,
-        eligibility,
-        duration,
-        programsoffered,
-        documentsrequired,
-        benefits,
-        applicationinformation,
-        agent,
-        hostuniversity,
-        image,
-      };
-      const scholarship = await this.service.updateScholarshipService(
-        scholarshipData
+      const imageName = image.originalname;
+      const imageUrl = await storeToFirebase(image);
+      const deleteImage = await this.service.readScholarshipByIDService(id);
+      const deleteImageName = deleteImage.imagename;
+      const deletedImageFromFirebase = await deleteFromFirebase(
+        deleteImageName
       );
-      return res
-        .status(201)
-        .json({ message: "Successfully Updated", data: scholarship });
+      if (deletedImageFromFirebase) {
+        const scholarshipData = {
+          id,
+          scholarshipname,
+          image: imageUrl,
+          imagename: imageName,
+          deadline,
+          scholarshiptype,
+          featured,
+          programs,
+          country,
+          description,
+          scholarshipcategory,
+          eligibility,
+          duration,
+          programsoffered,
+          documentsrequired,
+          benefits,
+          applicationinformation,
+          agent,
+          hostuniversity,
+        };
+        this.service.updateScholarshipService(scholarshipData);
+        return res.status(201).json({ message: "Successfully Updated" });
+      }
     } catch (error) {
       console.error("controller {edit scholarship}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -246,14 +256,17 @@ class ScholarshipController {
   }
 
   async deleteScholarship(req, res) {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
-      const scholarship = await this.service.deleteScholarshipService(id);
-      return res
-        .status(201)
-        .json({ message: "Successfully Deleted", data: scholarship });
+      const getImage = await this.service.readScholarshipByIDService(id);
+      const image = getImage.imagename;
+      const deletedImageFromFirebase = await deleteFromFirebase(image);
+      if (deletedImageFromFirebase) {
+        await this.service.deleteScholarshipService(id);
+        return res.status(201).json({ message: "Successfully Deleted" });
+      }
     } catch (error) {
-      console.error("controller {delete scholarship}", error.message);
+      console.error("delete scholarship {controller}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }

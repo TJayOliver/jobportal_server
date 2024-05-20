@@ -59,7 +59,10 @@ class ArticleDatabase {
 
   async readMainFeaturedArticle(articleValue) {
     try {
-      const article = await articleModel.find({ mainfeatured: articleValue });
+      const article = await articleModel
+        .find({ mainfeatured: articleValue })
+        .limit(1)
+        .sort({ datecreated: -1 });
       return article;
     } catch (error) {
       throw error;
@@ -78,10 +81,18 @@ class ArticleDatabase {
   async updateArticle(articleData) {
     try {
       const id = articleData?.id;
-      const { image, title, post, featured, mainfeatured, category } =
-        articleData;
+      const {
+        image,
+        imagename,
+        title,
+        post,
+        featured,
+        mainfeatured,
+        category,
+      } = articleData;
       const update = {
         image,
+        imagename,
         title,
         post,
         featured,

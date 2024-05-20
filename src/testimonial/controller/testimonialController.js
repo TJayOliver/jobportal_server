@@ -1,3 +1,8 @@
+import {
+  storeToFirebase,
+  deleteFromFirebase,
+} from "../../../lib/storeFirebase.js";
+
 class TestimonialController {
   constructor(service) {
     this.service = service;
@@ -5,20 +10,20 @@ class TestimonialController {
 
   async createTestimonial(req, res) {
     const { name, quote, position, author } = req.body;
-    const image = req.file.filename;
-    const details = {
-      name,
-      image,
-      image,
-      quote,
-      position,
-      author,
-    };
+    const image = req.file;
     try {
-      const testimonial = await this.service.createTestimonialService(details);
-      return res
-        .status(201)
-        .json({ message: "Successfully Created", data: testimonial });
+      const imageName = image.originalname;
+      const imageUrl = await storeToFirebase(image);
+      const details = {
+        name,
+        image: imageUrl,
+        imagename: imageName,
+        quote,
+        position,
+        author,
+      };
+      await this.service.createTestimonialService(details);
+      return res.status(201).json({ message: "Successfully Created" });
     } catch (error) {
       console.error("create testimonial {controller}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -53,20 +58,27 @@ class TestimonialController {
   async updateTestimonial(req, res) {
     const { id } = req.params;
     const { name, quote, position } = req.body;
-    const image = req.file.filename;
-    const details = {
-      id,
-      name,
-      image,
-      image,
-      quote,
-      position,
-    };
+    const image = req.file;
     try {
-      const testimonial = await this.service.updateTestimonialService(details);
-      return res
-        .status(201)
-        .json({ message: "Successfully Updated", data: testimonial });
+      const imageName = image.originalname;
+      const imageUrl = await storeToFirebase(image);
+      const deleteImage = await this.service.editTestimonialService(id);
+      const deleteImageName = deleteImage.imagename;
+      const deletedImageFromFirebase = await deleteFromFirebase(
+        deleteImageName
+      );
+      const details = {
+        id,
+        name,
+        image: imageUrl,
+        imagename: imageName,
+        quote,
+        position,
+      };
+      if (deletedImageFromFirebase) {
+        await this.service.updateTestimonialService(details);
+        return res.status(201).json({ message: "Successfully Updated" });
+      }
     } catch (error) {
       console.error("update testimonial {controller}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -76,10 +88,13 @@ class TestimonialController {
   async deleteTestimonial(req, res) {
     const { id } = req.params;
     try {
-      const testimonial = await this.service.deleteTestimonialService(id);
-      return res
-        .status(201)
-        .json({ message: "Successfully Deleted", data: testimonial });
+      const getImage = await this.service.editTestimonialService(id);
+      const image = getImage.imagename;
+      const deletedImageFromFirebase = await deleteFromFirebase(image);
+      if (deletedImageFromFirebase) {
+        await this.service.deleteTestimonialService(id);
+        return res.status(201).json({ message: "Successfully Deleted" });
+      }
     } catch (error) {
       console.error("delete testimonial {controller}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });

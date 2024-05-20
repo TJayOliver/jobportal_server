@@ -14,6 +14,7 @@ class ArticleService {
     author,
     category,
     image,
+    imagename,
   }) {
     try {
       const articleData = {
@@ -25,6 +26,7 @@ class ArticleService {
         mainfeatured,
         category,
         image,
+        imagename,
       };
       const article = await this.database.createArticle(articleData);
       return article;
@@ -126,6 +128,7 @@ class ArticleService {
     mainfeatured,
     category,
     image,
+    imagename,
   }) {
     try {
       const articleData = {
@@ -136,6 +139,7 @@ class ArticleService {
         mainfeatured,
         category,
         image,
+        imagename,
       };
       const article = await this.database.updateArticle(articleData);
       return article;

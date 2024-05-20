@@ -1,15 +1,6 @@
 import multer from "multer";
-import { nanoid } from "nanoid";
-import path from "path";
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "upload");
-  },
-  filename: (req, file, cb) => {
-    cb(null, nanoid(8) + path.extname(file.originalname));
-  },
-});
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   if (!file) {
