@@ -67,7 +67,8 @@ firebaseApp;
 
 connectMongoDB();
 
+app.listen(PORT, () => console.log(`App Connected on Port: ${PORT}`));
+
 if (process.env.NODE_ENV === "production") {
   console.log = {};
 }
-app.listen(PORT, () => console.log(`App Connected on Port: ${PORT}`));
