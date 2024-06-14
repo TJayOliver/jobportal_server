@@ -30,7 +30,6 @@ app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(morgan("tiny"));
 app.enable("trust proxy");
 
-//app.use("/upload", express.static("./upload"));
 app.use(cookieParser());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -71,4 +70,4 @@ connectMongoDB();
 if (process.env.NODE_ENV === "production") {
   console.log = {};
 }
-app.listen(PORT, () => console.log(`Connected on Port: ${PORT}`));
+app.listen(PORT, () => console.log(`App Connected on Port: ${PORT}`));
