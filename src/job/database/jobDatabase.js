@@ -21,7 +21,7 @@ class JobDatabase {
 
   async readAllJobs() {
     try {
-      const job = await jobModel.find();
+      const job = await jobModel.find().sort({ datecreated: -1 });
       return job;
     } catch (error) {
       throw error;
@@ -30,7 +30,7 @@ class JobDatabase {
 
   async readFeaturedJob(value) {
     try {
-      const job = await jobModel.find({ featured: value }).limit(6);
+      const job = await jobModel.find({ featured: value }).limit(6).sort({ datecreated: -1 });
       return job;
     } catch (error) {
       throw error;
@@ -90,21 +90,7 @@ class JobDatabase {
   async updateJob(jobDetails) {
     try {
       const id = jobDetails?.id;
-      const {
-        image,
-        imagename,
-        overview,
-        salary,
-        featured,
-        company,
-        website,
-        duration,
-        position,
-        location,
-        responsibility,
-        requirements,
-        jobcategory,
-      } = jobDetails;
+      const { image, imagename, overview, salary, featured, company, website, duration, position, location, responsibility, requirements, jobcategory } = jobDetails;
       const update = {
         image,
         imagename,
