@@ -101,9 +101,7 @@ class JobDatabase {
         duration,
         position,
         location,
-        responsibility,
-        requirements,
-        applicationinfo,
+        post,
         jobcategory,
       } = jobDetails;
       const update = {
@@ -117,9 +115,7 @@ class JobDatabase {
         duration,
         position,
         location,
-        responsibility,
-        requirements,
-        applicationinfo,
+        post,
         jobcategory,
       };
       const job = await jobModel.updateOne({ id: id }, update);

@@ -171,17 +171,16 @@ class ScholarshipController {
       programs,
       scholarshipcategory,
       country,
-      author,
     } = req.body;
     const { id } = req.params;
     const image = req.file;
     try {
-      const imageName = image.originalname;
-      const imageUrl = await storeToFirebase(image);
       const deleteImage = await this.service.readScholarshipByIDService(id);
       const deleteImageName = deleteImage.imagename;
       const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
       if (deletedImageFromFirebase) {
+        const imageName = image.originalname;
+        const imageUrl = await storeToFirebase(image);
         const scholarshipData = {
           id,
           scholarshipname,
@@ -197,10 +196,11 @@ class ScholarshipController {
           programs,
           scholarshipcategory,
           country,
-          author,
         };
         this.service.updateScholarshipService(scholarshipData);
         return res.status(201).json({ message: "Successfully Updated" });
+      } else {
+        return res.status(500).json({ message: "Internal Server Error" });
       }
     } catch (error) {
       console.error("controller {edit scholarship}", error.message);

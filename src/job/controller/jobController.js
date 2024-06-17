@@ -156,12 +156,12 @@ class JobController {
     } = req.body;
     const image = req.file;
     try {
-      const imageName = image.originalname;
-      const imageUrl = await storeToFirebase(image);
       const deleteImage = await this.service.readJobByIDService(id);
       const deleteImageName = deleteImage.imagename;
       const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
       if (deletedImageFromFirebase) {
+        const imageName = image.originalname;
+        const imageUrl = await storeToFirebase(image);
         const jobDetails = {
           id,
           image: imageUrl,
@@ -175,11 +175,12 @@ class JobController {
           position,
           location,
           post,
-          author,
           jobcategory,
         };
         await this.service.updateJobService(jobDetails);
         return res.status(201).json({ message: "Successfully Updated" });
+      } else {
+        return res.status(500).json({ message: "Internal Server Error" });
       }
     } catch (error) {
       console.error("update job {controller}:", error.message);

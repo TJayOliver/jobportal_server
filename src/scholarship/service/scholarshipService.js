@@ -155,7 +155,6 @@ class ScholarshipService {
     programs,
     scholarshipcategory,
     country,
-    author,
   }) {
     try {
       const scholarshipData = {
@@ -172,7 +171,6 @@ class ScholarshipService {
         programs,
         scholarshipcategory,
         country,
-        author,
       };
       const scholarship = await this.database.updateScholarship(scholarshipData);
       return scholarship;

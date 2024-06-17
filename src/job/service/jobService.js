@@ -149,7 +149,6 @@ class JobService {
         position,
         location,
         post,
-        author,
         jobcategory,
       };
       const job = await this.database.updateJob(jobDetails);

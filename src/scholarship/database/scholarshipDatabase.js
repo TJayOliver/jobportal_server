@@ -21,7 +21,7 @@ class ScholarshipDatabase {
 
   async readScholarship() {
     try {
-      const scholarship = await scholarshipModel.find();
+      const scholarship = await scholarshipModel.find().sort({ datecreated: -1 });
       return scholarship;
     } catch (error) {
       throw error;
@@ -32,7 +32,8 @@ class ScholarshipDatabase {
     try {
       const scholarship = await scholarshipModel
         .find({ country: country })
-        .limit(8);
+        .limit(8)
+        .sort({ datecreated: -1 });
       return scholarship;
     } catch (error) {
       throw error;
@@ -43,7 +44,8 @@ class ScholarshipDatabase {
     try {
       const scholarship = await scholarshipModel
         .find({ featured: value })
-        .limit(8);
+        .limit(8)
+        .sort({ datecreated: -1 });
       return scholarship;
     } catch (error) {
       throw error;

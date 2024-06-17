@@ -1,7 +1,4 @@
-import {
-  storeToFirebase,
-  deleteFromFirebase,
-} from "../../../lib/storeFirebase.js";
+import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
 
 class TestimonialController {
   constructor(service) {
@@ -33,9 +30,7 @@ class TestimonialController {
   async readTestimonial(req, res) {
     try {
       const testimonial = await this.service.readTestimonialService();
-      return res
-        .status(201)
-        .json({ message: "Successfully Created", data: testimonial });
+      return res.status(201).json({ message: "Successfully Created", data: testimonial });
     } catch (error) {
       console.error("read testimonial {controller}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -46,9 +41,7 @@ class TestimonialController {
     const { id } = req.params;
     try {
       const testimonial = await this.service.editTestimonialService(id);
-      return res
-        .status(201)
-        .json({ message: "Successfully Retrieved", data: testimonial });
+      return res.status(201).json({ message: "Successfully Retrieved", data: testimonial });
     } catch (error) {
       console.error("edit testimonial {controller}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -60,22 +53,20 @@ class TestimonialController {
     const { name, quote, position } = req.body;
     const image = req.file;
     try {
-      const imageName = image.originalname;
-      const imageUrl = await storeToFirebase(image);
       const deleteImage = await this.service.editTestimonialService(id);
       const deleteImageName = deleteImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(
-        deleteImageName
-      );
-      const details = {
-        id,
-        name,
-        image: imageUrl,
-        imagename: imageName,
-        quote,
-        position,
-      };
+      const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
       if (deletedImageFromFirebase) {
+        const imageName = image.originalname;
+        const imageUrl = await storeToFirebase(image);
+        const details = {
+          id,
+          name,
+          image: imageUrl,
+          imagename: imageName,
+          quote,
+          position,
+        };
         await this.service.updateTestimonialService(details);
         return res.status(201).json({ message: "Successfully Updated" });
       }
