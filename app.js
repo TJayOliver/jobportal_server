@@ -70,4 +70,4 @@ if (process.env.NODE_ENV === "production") {
   console.log = {};
 }
 
-app.listen(PORT, console.log("connected"));
+app.listen(PORT);
