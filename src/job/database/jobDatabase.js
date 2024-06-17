@@ -90,7 +90,22 @@ class JobDatabase {
   async updateJob(jobDetails) {
     try {
       const id = jobDetails?.id;
-      const { image, imagename, overview, salary, featured, company, website, duration, position, location, responsibility, requirements, jobcategory } = jobDetails;
+      const {
+        image,
+        imagename,
+        overview,
+        salary,
+        featured,
+        company,
+        website,
+        duration,
+        position,
+        location,
+        responsibility,
+        requirements,
+        applicationinfo,
+        jobcategory,
+      } = jobDetails;
       const update = {
         image,
         imagename,
@@ -104,6 +119,7 @@ class JobDatabase {
         location,
         responsibility,
         requirements,
+        applicationinfo,
         jobcategory,
       };
       const job = await jobModel.updateOne({ id: id }, update);

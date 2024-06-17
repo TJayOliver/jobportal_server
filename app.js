@@ -28,7 +28,6 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(helmet({ crossOriginResourcePolicy: false }));
 
 app.use(morgan("tiny"));
-app.enable("trust proxy");
 
 app.use(cookieParser());
 app.use(bodyparser.json());
@@ -71,4 +70,4 @@ if (process.env.NODE_ENV === "production") {
   console.log = {};
 }
 
-app.listen(PORT);
+app.listen(PORT, console.log("connected"));

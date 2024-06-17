@@ -1,7 +1,4 @@
-import {
-  storeToFirebase,
-  deleteFromFirebase,
-} from "../../../lib/storeFirebase.js";
+import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
 
 class JobController {
   constructor(service) {
@@ -10,16 +7,15 @@ class JobController {
 
   async createJob(req, res) {
     const {
-      salary,
       overview,
+      salary,
       featured,
       company,
       website,
       duration,
       position,
       location,
-      responsibility,
-      requirements,
+      post,
       author,
       jobcategory,
     } = req.body;
@@ -38,8 +34,7 @@ class JobController {
         duration,
         position,
         location,
-        responsibility,
-        requirements,
+        post,
         author,
         jobcategory,
       };
@@ -82,9 +77,7 @@ class JobController {
     try {
       const value = "true";
       const job = await this.service.readFeaturedJobService(value);
-      return res
-        .status(201)
-        .json({ message: "Successfully Retrieved", data: job });
+      return res.status(201).json({ message: "Successfully Retrieved", data: job });
     } catch (error) {
       console.error("read featured job {controller}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -95,9 +88,7 @@ class JobController {
     const { jobcategory } = req.params;
     try {
       const job = await this.service.readJobByCategoryService(jobcategory);
-      return res
-        .status(201)
-        .json({ message: "Successfully Retrieved", data: job });
+      return res.status(201).json({ message: "Successfully Retrieved", data: job });
     } catch (error) {
       console.error("read job by category {controller}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -131,9 +122,7 @@ class JobController {
         duration,
       };
       const job = await this.service.searchJobService(jobDetails);
-      return res
-        .status(201)
-        .json({ message: "Successfully Retrieved", data: job });
+      return res.status(201).json({ message: "Successfully Retrieved", data: job });
     } catch (error) {
       console.error("search job {controller}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -144,9 +133,7 @@ class JobController {
     const { id } = req.params;
     try {
       const job = await this.service.editJobService(id);
-      return res
-        .status(201)
-        .json({ message: "Successfully Retrieved", data: job });
+      return res.status(201).json({ message: "Successfully Retrieved", data: job });
     } catch (error) {
       console.error("edit job {controller}:", error.message);
       res.status(500).json({ message: "Internal Server Error" });
@@ -164,8 +151,7 @@ class JobController {
       duration,
       position,
       location,
-      responsibility,
-      requirements,
+      post,
       jobcategory,
     } = req.body;
     const image = req.file;
@@ -174,15 +160,13 @@ class JobController {
       const imageUrl = await storeToFirebase(image);
       const deleteImage = await this.service.readJobByIDService(id);
       const deleteImageName = deleteImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(
-        deleteImageName
-      );
+      const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
       if (deletedImageFromFirebase) {
         const jobDetails = {
           id,
-          overview,
           image: imageUrl,
           imagename: imageName,
+          overview,
           salary,
           featured,
           company,
@@ -190,8 +174,8 @@ class JobController {
           duration,
           position,
           location,
-          responsibility,
-          requirements,
+          post,
+          author,
           jobcategory,
         };
         await this.service.updateJobService(jobDetails);

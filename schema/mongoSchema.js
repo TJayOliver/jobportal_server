@@ -42,11 +42,10 @@ const jobsSchema = new Schema({
   salary: { type: String, required: true },
   featured: { type: String, enum: ["true", "false"] },
   company: { type: String, required: true },
-  website: { type: String, required: true },
+  website: { type: String },
   duration: { type: String, enum: ["Full Time", "Part Time"] },
   location: { type: String, required: true },
-  responsibility: { type: String, required: true },
-  requirements: { type: String, required: true },
+  post: { type: String, required: true },
   author: { type: String, required: true },
   jobcategory: { type: String, required: true },
   datecreated: { type: Date, default: new Date() },
@@ -67,15 +66,6 @@ const scholarshipSchema = new Schema({
   scholarshipname: { type: String, required: true },
   deadline: { type: Date, default: new Date() },
   description: { type: String, required: true },
-  eligibility: { type: String, required: true },
-  duration: { type: String, required: true },
-  programsoffered: { type: String, required: true },
-  benefits: { type: String, required: true },
-  applicationinformation: { type: String, required: true },
-  hostuniversity: { type: String, required: true },
-  documentsrequired: { type: String, required: true },
-  author: { type: String, required: true },
-  datecreated: { type: Date, default: new Date() },
   agent: { type: String, required: true, enum: ["Agent", "No agent"] },
   featured: { type: String, required: true, enum: ["true", "false"] },
   scholarshiptype: {
@@ -97,13 +87,7 @@ const scholarshipSchema = new Schema({
   scholarshipcategory: {
     type: String,
     required: true,
-    enum: [
-      "Government",
-      "Private",
-      "Organizational",
-      "International",
-      "Research",
-    ],
+    enum: ["Government", "Private", "Organizational", "International", "Research"],
   },
   country: {
     type: String,
@@ -307,6 +291,9 @@ const scholarshipSchema = new Schema({
       "Zimbabwe",
     ],
   },
+  post: { type: String, required: true },
+  author: { type: String, required: true },
+  datecreated: { type: Date, default: new Date() },
 });
 
 const subscribersSchema = new Schema({

@@ -17,8 +17,7 @@ class JobService {
     duration,
     position,
     location,
-    responsibility,
-    requirements,
+    post,
     author,
     jobcategory,
   }) {
@@ -35,8 +34,7 @@ class JobService {
         duration,
         position,
         location,
-        responsibility,
-        requirements,
+        post,
         author,
         jobcategory,
       };
@@ -124,9 +122,9 @@ class JobService {
 
   async updateJobService({
     id,
-    overview,
     image,
     imagename,
+    overview,
     salary,
     featured,
     company,
@@ -134,16 +132,15 @@ class JobService {
     duration,
     position,
     location,
-    responsibility,
-    requirements,
+    post,
     jobcategory,
   }) {
     try {
       const jobDetails = {
         id,
-        overview,
         image,
         imagename,
+        overview,
         salary,
         featured,
         company,
@@ -151,8 +148,8 @@ class JobService {
         duration,
         position,
         location,
-        responsibility,
-        requirements,
+        post,
+        author,
         jobcategory,
       };
       const job = await this.database.updateJob(jobDetails);

@@ -12,13 +12,7 @@ class ScholarshipService {
     scholarshipname,
     deadline,
     description,
-    eligibility,
-    duration,
-    programsoffered,
-    documentsrequired,
-    benefits,
-    applicationinformation,
-    hostuniversity,
+    post,
     agent,
     featured,
     scholarshiptype,
@@ -35,13 +29,7 @@ class ScholarshipService {
         scholarshipname,
         deadline,
         description,
-        eligibility,
-        duration,
-        programsoffered,
-        documentsrequired,
-        benefits,
-        applicationinformation,
-        hostuniversity,
+        post,
         agent,
         featured,
         scholarshiptype,
@@ -50,9 +38,7 @@ class ScholarshipService {
         country,
         author,
       };
-      const scholarship = await this.database.createScholarship(
-        scholarshipData
-      );
+      const scholarship = await this.database.createScholarship(scholarshipData);
       return scholarship;
     } catch (error) {
       console.error("create scholarship {service}:", error.message);
@@ -112,9 +98,7 @@ class ScholarshipService {
     try {
       const cachedData = myCache.get(cacheKey);
       if (cachedData) return cachedData;
-      const scholarship = await this.database.readScholarshipByCategory(
-        scholarshipcategory
-      );
+      const scholarship = await this.database.readScholarshipByCategory(scholarshipcategory);
       myCache.set(cacheKey, scholarship, cacheTime);
       return scholarship;
     } catch (error) {
@@ -140,9 +124,7 @@ class ScholarshipService {
     try {
       const cachedData = myCache.get(cacheKey);
       if (cachedData) return cachedData;
-      const scholarship = await this.database.searchScholarshipByCountry(
-        country
-      );
+      const scholarship = await this.database.searchScholarshipByCountry(country);
       myCache.set(cacheKey, scholarship, cacheTime);
       return scholarship;
     } catch (error) {
@@ -166,13 +148,7 @@ class ScholarshipService {
     scholarshipname,
     deadline,
     description,
-    eligibility,
-    duration,
-    programsoffered,
-    documentsrequired,
-    benefits,
-    applicationinformation,
-    hostuniversity,
+    post,
     agent,
     featured,
     scholarshiptype,
@@ -189,13 +165,7 @@ class ScholarshipService {
         scholarshipname,
         deadline,
         description,
-        eligibility,
-        duration,
-        programsoffered,
-        documentsrequired,
-        benefits,
-        applicationinformation,
-        hostuniversity,
+        post,
         agent,
         featured,
         scholarshiptype,
@@ -204,9 +174,7 @@ class ScholarshipService {
         country,
         author,
       };
-      const scholarship = await this.database.updateScholarship(
-        scholarshipData
-      );
+      const scholarship = await this.database.updateScholarship(scholarshipData);
       return scholarship;
     } catch (error) {
       console.error("update scholarship {service}:", error.message);

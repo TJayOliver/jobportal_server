@@ -1,7 +1,4 @@
-import {
-  storeToFirebase,
-  deleteFromFirebase,
-} from "../../../lib/storeFirebase.js";
+import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
 
 class ScholarshipController {
   constructor(scholarshipService) {
@@ -13,13 +10,7 @@ class ScholarshipController {
       scholarshipname,
       deadline,
       description,
-      eligibility,
-      duration,
-      programsoffered,
-      documentsrequired,
-      benefits,
-      applicationinformation,
-      hostuniversity,
+      post,
       agent,
       featured,
       scholarshiptype,
@@ -38,13 +29,7 @@ class ScholarshipController {
         scholarshipname,
         deadline,
         description,
-        eligibility,
-        duration,
-        programsoffered,
-        documentsrequired,
-        benefits,
-        applicationinformation,
-        hostuniversity,
+        post,
         agent,
         featured,
         scholarshiptype,
@@ -91,9 +76,7 @@ class ScholarshipController {
   async readScholarshipByCountry(req, res) {
     try {
       const scholarship = await this.service.readScholarshipByCountryService();
-      return res
-        .status(201)
-        .json({ message: "Successfully retrieved", data: scholarship });
+      return res.status(201).json({ message: "Successfully retrieved", data: scholarship });
     } catch (error) {
       console.error("controller {read scholarship by country}:", error.message);
       res.status(500).json({ message: "Internal Server Error" });
@@ -103,9 +86,7 @@ class ScholarshipController {
   async readFeaturedScholarship(req, res) {
     try {
       const value = "true";
-      const scholarship = await this.service.readFeaturedScholarshipService(
-        value
-      );
+      const scholarship = await this.service.readFeaturedScholarshipService(value);
       res.status(201).json({
         message: "Successfully retrieved",
         data: scholarship,
@@ -119,12 +100,8 @@ class ScholarshipController {
   async readScholarshipByCategory(req, res) {
     const { scholarshipcategory } = req.params;
     try {
-      const scholarship = await this.service.readScholarshipByCategoryService(
-        scholarshipcategory
-      );
-      return res
-        .status(201)
-        .json({ message: "Successfully Retrieved", data: scholarship });
+      const scholarship = await this.service.readScholarshipByCategoryService(scholarshipcategory);
+      return res.status(201).json({ message: "Successfully Retrieved", data: scholarship });
     } catch (error) {
       console.error("controller {read scholarship by category}", error.message);
       res.status(500).json({ message: "Internal Server Error" });
@@ -152,12 +129,8 @@ class ScholarshipController {
   async readScholarshipByCountry(req, res) {
     const { countryname } = req.params;
     try {
-      const scholarship = await this.service.searchScholarshipByCountryService(
-        countryname
-      );
-      return res
-        .status(201)
-        .json({ message: "Successfully Retrieved", data: [scholarship] });
+      const scholarship = await this.service.searchScholarshipByCountryService(countryname);
+      return res.status(201).json({ message: "Successfully Retrieved", data: [scholarship] });
     } catch (error) {
       console.error("controller {read scholarship by country}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -167,17 +140,10 @@ class ScholarshipController {
   async searchScholarshipByCountry(req, res) {
     const { country } = req.body;
     try {
-      const scholarship = await this.service.searchScholarshipByCountryService(
-        country
-      );
-      return res
-        .status(201)
-        .json({ message: "Successfully Retrieved", data: scholarship });
+      const scholarship = await this.service.searchScholarshipByCountryService(country);
+      return res.status(201).json({ message: "Successfully Retrieved", data: scholarship });
     } catch (error) {
-      console.error(
-        "controller {search scholarship by country}:",
-        error.message
-      );
+      console.error("controller {search scholarship by country}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -186,9 +152,7 @@ class ScholarshipController {
     const { id } = req.params;
     try {
       const scholarship = await this.service.editScholarshipService(id);
-      return res
-        .status(201)
-        .json({ message: "Successfully Retrieved", data: scholarship });
+      return res.status(201).json({ message: "Successfully Retrieved", data: scholarship });
     } catch (error) {
       console.error("controller {edit scholarship}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -199,20 +163,15 @@ class ScholarshipController {
     const {
       scholarshipname,
       deadline,
-      scholarshiptype,
-      featured,
-      programs,
-      country,
       description,
-      scholarshipcategory,
-      eligibility,
-      duration,
-      programsoffered,
-      documentsrequired,
-      benefits,
-      applicationinformation,
+      post,
       agent,
-      hostuniversity,
+      featured,
+      scholarshiptype,
+      programs,
+      scholarshipcategory,
+      country,
+      author,
     } = req.body;
     const { id } = req.params;
     const image = req.file;
@@ -221,30 +180,24 @@ class ScholarshipController {
       const imageUrl = await storeToFirebase(image);
       const deleteImage = await this.service.readScholarshipByIDService(id);
       const deleteImageName = deleteImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(
-        deleteImageName
-      );
+      const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
       if (deletedImageFromFirebase) {
         const scholarshipData = {
           id,
           scholarshipname,
           image: imageUrl,
           imagename: imageName,
+          scholarshipname,
           deadline,
-          scholarshiptype,
-          featured,
-          programs,
-          country,
           description,
-          scholarshipcategory,
-          eligibility,
-          duration,
-          programsoffered,
-          documentsrequired,
-          benefits,
-          applicationinformation,
+          post,
           agent,
-          hostuniversity,
+          featured,
+          scholarshiptype,
+          programs,
+          scholarshipcategory,
+          country,
+          author,
         };
         this.service.updateScholarshipService(scholarshipData);
         return res.status(201).json({ message: "Successfully Updated" });
