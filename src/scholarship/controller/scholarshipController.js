@@ -21,8 +21,8 @@ class ScholarshipController {
     } = req.body;
     const image = req.file;
     try {
-      const imageName = image.originalname;
-      const imageUrl = await storeToFirebase(image);
+      const imageName = nanoid(6) + image.originalname;
+      const imageUrl = await storeToFirebase(imageName);
       const scholarshipData = {
         image: imageUrl,
         imagename: imageName,
@@ -73,16 +73,6 @@ class ScholarshipController {
     }
   }
 
-  async readScholarshipByCountry(req, res) {
-    try {
-      const scholarship = await this.service.readScholarshipByCountryService();
-      return res.status(201).json({ message: "Successfully retrieved", data: scholarship });
-    } catch (error) {
-      console.error("controller {read scholarship by country}:", error.message);
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  }
-
   async readFeaturedScholarship(req, res) {
     try {
       const value = "true";
@@ -129,8 +119,8 @@ class ScholarshipController {
   async readScholarshipByCountry(req, res) {
     const { countryname } = req.params;
     try {
-      const scholarship = await this.service.searchScholarshipByCountryService(countryname);
-      return res.status(201).json({ message: "Successfully Retrieved", data: [scholarship] });
+      const scholarship = await this.service.readScholarshipByCountryService(countryname);
+      return res.status(201).json({ message: "Successfully Retrieved", data: scholarship });
     } catch (error) {
       console.error("controller {read scholarship by country}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -175,17 +165,44 @@ class ScholarshipController {
     const { id } = req.params;
     const image = req.file;
     try {
-      const deleteImage = await this.service.readScholarshipByIDService(id);
-      const deleteImageName = deleteImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
-      if (deletedImageFromFirebase) {
-        const imageName = image.originalname;
-        const imageUrl = await storeToFirebase(image);
+      if (image !== undefined) {
+        const deleteImage = await this.service.readScholarshipByIDService(id);
+        const deleteImageName = deleteImage.imagename;
+        const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
+        if (deletedImageFromFirebase) {
+          const imageName = nanoid(6) + image.originalname;
+          const imageUrl = await storeToFirebase(imageName);
+          const scholarshipData = {
+            id,
+            scholarshipname,
+            image: imageUrl,
+            imagename: imageName,
+            scholarshipname,
+            deadline,
+            description,
+            post,
+            agent,
+            featured,
+            scholarshiptype,
+            programs,
+            scholarshipcategory,
+            country,
+          };
+          this.service.updateScholarshipService(scholarshipData);
+          return res.status(201).json({ message: "Successfully Updated" });
+        } else {
+          return res.status(500).json({ message: "Internal Server Error" });
+        }
+      } else {
+        // admin wants to keep the old image
+        const retrieveOldImage = await this.service.readScholarshipByIDService(id);
+        const retrievedOldImageName = retrieveOldImage.imagename;
+        const retrievedImageNameLink = retrieveOldImage.image;
         const scholarshipData = {
           id,
           scholarshipname,
-          image: imageUrl,
-          imagename: imageName,
+          image: retrievedImageNameLink,
+          imagename: retrievedOldImageName,
           scholarshipname,
           deadline,
           description,
@@ -199,8 +216,6 @@ class ScholarshipController {
         };
         this.service.updateScholarshipService(scholarshipData);
         return res.status(201).json({ message: "Successfully Updated" });
-      } else {
-        return res.status(500).json({ message: "Internal Server Error" });
       }
     } catch (error) {
       console.error("controller {edit scholarship}", error.message);

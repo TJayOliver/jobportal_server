@@ -1,4 +1,5 @@
 import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
+import { nanoid } from "nanoid";
 
 class TestimonialController {
   constructor(service) {
@@ -9,7 +10,7 @@ class TestimonialController {
     const { name, quote, position, author } = req.body;
     const image = req.file;
     try {
-      const imageName = image.originalname;
+      const imageName = nanoid(6) + image.originalname;
       const imageUrl = await storeToFirebase(image);
       const details = {
         name,
@@ -53,17 +54,34 @@ class TestimonialController {
     const { name, quote, position } = req.body;
     const image = req.file;
     try {
-      const deleteImage = await this.service.editTestimonialService(id);
-      const deleteImageName = deleteImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
-      if (deletedImageFromFirebase) {
-        const imageName = image.originalname;
-        const imageUrl = await storeToFirebase(image);
+      if (image !== undefined) {
+        const deleteImage = await this.service.editTestimonialService(id);
+        const deleteImageName = deleteImage.imagename;
+        const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
+        if (deletedImageFromFirebase) {
+          const imageName = nanoid(6) + image.originalname;
+          const imageUrl = await storeToFirebase(image);
+          const details = {
+            id,
+            name,
+            image: imageUrl,
+            imagename: imageName,
+            quote,
+            position,
+          };
+          await this.service.updateTestimonialService(details);
+          return res.status(201).json({ message: "Successfully Updated" });
+        }
+      } else {
+        // admin wants to keep the old image
+        const retrieveOldImage = await this.service.editTestimonialService(id);
+        const retrievedOldImageName = retrieveOldImage.imagename;
+        const retrievedImageNameLink = retrieveOldImage.image;
         const details = {
           id,
           name,
-          image: imageUrl,
-          imagename: imageName,
+          image: retrievedImageNameLink,
+          imagename: retrievedOldImageName,
           quote,
           position,
         };

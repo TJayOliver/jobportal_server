@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
 
 class JobController {
@@ -21,8 +22,8 @@ class JobController {
     } = req.body;
     const image = req.file;
     try {
-      const imageName = image.originalname;
-      const imageUrl = await storeToFirebase(image);
+      const imageName = nanoid(6) + image.originalname;
+      const imageUrl = await storeToFirebase(imageName);
       const jobDetails = {
         image: imageUrl,
         imagename: imageName,
@@ -156,16 +157,42 @@ class JobController {
     } = req.body;
     const image = req.file;
     try {
-      const deleteImage = await this.service.readJobByIDService(id);
-      const deleteImageName = deleteImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
-      if (deletedImageFromFirebase) {
-        const imageName = image.originalname;
-        const imageUrl = await storeToFirebase(image);
+      if (image !== undefined) {
+        const deleteImage = await this.service.readJobByIDService(id);
+        const deleteImageName = deleteImage.imagename;
+        const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
+        if (deletedImageFromFirebase) {
+          const imageName = nanoid(6) + image.originalname;
+          const imageUrl = await storeToFirebase(imageName);
+          const jobDetails = {
+            id,
+            image: imageUrl,
+            imagename: imageName,
+            overview,
+            salary,
+            featured,
+            company,
+            website,
+            duration,
+            position,
+            location,
+            post,
+            jobcategory,
+          };
+          await this.service.updateJobService(jobDetails);
+          return res.status(201).json({ message: "Successfully Updated" });
+        } else {
+          return res.status(500).json({ message: "Internal Server Error" });
+        }
+      } else {
+        // admin wants to keep the old image
+        const retrieveOldImage = await this.service.readJobByIDService(id);
+        const retrievedOldImageName = retrieveOldImage.imagename;
+        const retrievedImageNameLink = retrieveOldImage.image;
         const jobDetails = {
           id,
-          image: imageUrl,
-          imagename: imageName,
+          image: retrievedImageNameLink,
+          imagename: retrievedOldImageName,
           overview,
           salary,
           featured,
@@ -179,8 +206,6 @@ class JobController {
         };
         await this.service.updateJobService(jobDetails);
         return res.status(201).json({ message: "Successfully Updated" });
-      } else {
-        return res.status(500).json({ message: "Internal Server Error" });
       }
     } catch (error) {
       console.error("update job {controller}:", error.message);
