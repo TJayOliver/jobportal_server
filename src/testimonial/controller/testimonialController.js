@@ -1,6 +1,3 @@
-import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
-import { nanoid } from "nanoid";
-
 class TestimonialController {
   constructor(service) {
     this.service = service;
@@ -10,17 +7,15 @@ class TestimonialController {
     const { name, quote, position, author } = req.body;
     const image = req.file;
     try {
-      const imageName = nanoid(6) + image.originalname;
-      const imageUrl = await storeToFirebase(image);
       const details = {
         name,
-        image: imageUrl,
-        imagename: imageName,
+        image,
         quote,
         position,
         author,
       };
-      await this.service.createTestimonialService(details);
+      const testimonial = await this.service.createTestimonialService(details);
+      if (testimonial.error) return res.status(500).json({ message: "Error in Uploading Image" });
       return res.status(201).json({ message: "Successfully Created" });
     } catch (error) {
       console.error("create testimonial {controller}", error.message);
@@ -54,40 +49,16 @@ class TestimonialController {
     const { name, quote, position } = req.body;
     const image = req.file;
     try {
-      if (image !== undefined) {
-        const deleteImage = await this.service.editTestimonialService(id);
-        const deleteImageName = deleteImage.imagename;
-        const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
-        if (deletedImageFromFirebase) {
-          const imageName = nanoid(6) + image.originalname;
-          const imageUrl = await storeToFirebase(image);
-          const details = {
-            id,
-            name,
-            image: imageUrl,
-            imagename: imageName,
-            quote,
-            position,
-          };
-          await this.service.updateTestimonialService(details);
-          return res.status(201).json({ message: "Successfully Updated" });
-        }
-      } else {
-        // admin wants to keep the old image
-        const retrieveOldImage = await this.service.editTestimonialService(id);
-        const retrievedOldImageName = retrieveOldImage.imagename;
-        const retrievedImageNameLink = retrieveOldImage.image;
-        const details = {
-          id,
-          name,
-          image: retrievedImageNameLink,
-          imagename: retrievedOldImageName,
-          quote,
-          position,
-        };
-        await this.service.updateTestimonialService(details);
-        return res.status(201).json({ message: "Successfully Updated" });
-      }
+      const details = {
+        id,
+        name,
+        image,
+        quote,
+        position,
+      };
+      const testimonial = await this.service.updateTestimonialService(details);
+      if (testimonial.error) return res.status(500).json({ message: testimonial.error });
+      return res.status(201).json({ message: "Successfully Updated" });
     } catch (error) {
       console.error("update testimonial {controller}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -97,13 +68,9 @@ class TestimonialController {
   async deleteTestimonial(req, res) {
     const { id } = req.params;
     try {
-      const getImage = await this.service.editTestimonialService(id);
-      const image = getImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(image);
-      if (deletedImageFromFirebase) {
-        await this.service.deleteTestimonialService(id);
-        return res.status(201).json({ message: "Successfully Deleted" });
-      }
+      const testimonial = await this.service.deleteTestimonialService(id);
+      if (testimonial.error) return res.status(500).json({ message: testimonial.error });
+      return res.status(201).json({ message: "Successfully Deleted" });
     } catch (error) {
       console.error("delete testimonial {controller}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });

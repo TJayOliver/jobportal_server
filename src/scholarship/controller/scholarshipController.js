@@ -21,11 +21,8 @@ class ScholarshipController {
     } = req.body;
     const image = req.file;
     try {
-      const imageName = nanoid(6) + image.originalname;
-      const imageUrl = await storeToFirebase(imageName);
       const scholarshipData = {
-        image: imageUrl,
-        imagename: imageName,
+        image,
         scholarshipname,
         deadline,
         description,
@@ -38,7 +35,8 @@ class ScholarshipController {
         country,
         author,
       };
-      await this.service.createScholarshipService(scholarshipData);
+      const scholarship = await this.service.createScholarshipService(scholarshipData);
+      if (scholarship.error) return res.status(500).json({ message: "Error in Uploading Image" });
       return res.status(201).json({ message: "Successfully Created" });
     } catch (error) {
       console.error("controller {create scholarship}", error.message);
@@ -165,58 +163,24 @@ class ScholarshipController {
     const { id } = req.params;
     const image = req.file;
     try {
-      if (image !== undefined) {
-        const deleteImage = await this.service.readScholarshipByIDService(id);
-        const deleteImageName = deleteImage.imagename;
-        const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
-        if (deletedImageFromFirebase) {
-          const imageName = nanoid(6) + image.originalname;
-          const imageUrl = await storeToFirebase(imageName);
-          const scholarshipData = {
-            id,
-            scholarshipname,
-            image: imageUrl,
-            imagename: imageName,
-            scholarshipname,
-            deadline,
-            description,
-            post,
-            agent,
-            featured,
-            scholarshiptype,
-            programs,
-            scholarshipcategory,
-            country,
-          };
-          this.service.updateScholarshipService(scholarshipData);
-          return res.status(201).json({ message: "Successfully Updated" });
-        } else {
-          return res.status(500).json({ message: "Internal Server Error" });
-        }
-      } else {
-        // admin wants to keep the old image
-        const retrieveOldImage = await this.service.readScholarshipByIDService(id);
-        const retrievedOldImageName = retrieveOldImage.imagename;
-        const retrievedImageNameLink = retrieveOldImage.image;
-        const scholarshipData = {
-          id,
-          scholarshipname,
-          image: retrievedImageNameLink,
-          imagename: retrievedOldImageName,
-          scholarshipname,
-          deadline,
-          description,
-          post,
-          agent,
-          featured,
-          scholarshiptype,
-          programs,
-          scholarshipcategory,
-          country,
-        };
-        this.service.updateScholarshipService(scholarshipData);
-        return res.status(201).json({ message: "Successfully Updated" });
-      }
+      const scholarshipData = {
+        id,
+        scholarshipname,
+        image,
+        scholarshipname,
+        deadline,
+        description,
+        post,
+        agent,
+        featured,
+        scholarshiptype,
+        programs,
+        scholarshipcategory,
+        country,
+      };
+      const scholarship = await this.service.updateScholarshipService(scholarshipData);
+      if (scholarship.error) return res.status(500).json({ message: scholarship.error });
+      return res.status(201).json({ message: "Successfully Updated" });
     } catch (error) {
       console.error("controller {edit scholarship}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -226,13 +190,9 @@ class ScholarshipController {
   async deleteScholarship(req, res) {
     const { id } = req.params;
     try {
-      const getImage = await this.service.readScholarshipByIDService(id);
-      const image = getImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(image);
-      if (deletedImageFromFirebase) {
-        await this.service.deleteScholarshipService(id);
-        return res.status(201).json({ message: "Successfully Deleted" });
-      }
+      const scholarship = await this.service.deleteScholarshipService(id);
+      if (scholarship.error) return res.status(500).json({ message: scholarship.error });
+      return res.status(201).json({ message: "Successfully Deleted" });
     } catch (error) {
       console.error("delete scholarship {controller}", error.message);
       return res.status(500).json({ message: "Internal Server Error" });

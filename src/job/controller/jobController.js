@@ -1,6 +1,3 @@
-import { nanoid } from "nanoid";
-import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
-
 class JobController {
   constructor(service) {
     this.service = service;
@@ -22,11 +19,7 @@ class JobController {
     } = req.body;
     const image = req.file;
     try {
-      const imageName = nanoid(6) + image.originalname;
-      const imageUrl = await storeToFirebase(imageName);
       const jobDetails = {
-        image: imageUrl,
-        imagename: imageName,
         overview,
         salary,
         featured,
@@ -38,8 +31,10 @@ class JobController {
         post,
         author,
         jobcategory,
+        image,
       };
-      await this.service.createJobService(jobDetails);
+      const job = await this.service.createJobService(jobDetails);
+      if (job.error) return res.status(500).json({ message: "Error in Uploading Image" });
       return res.status(201).json({ message: "Successfully Created" });
     } catch (error) {
       console.error("create job {controller}:", error.message);
@@ -156,57 +151,24 @@ class JobController {
       jobcategory,
     } = req.body;
     const image = req.file;
+    const jobDetails = {
+      id,
+      image,
+      overview,
+      salary,
+      featured,
+      company,
+      website,
+      duration,
+      position,
+      location,
+      post,
+      jobcategory,
+    };
     try {
-      if (image !== undefined) {
-        const deleteImage = await this.service.readJobByIDService(id);
-        const deleteImageName = deleteImage.imagename;
-        const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
-        if (deletedImageFromFirebase) {
-          const imageName = nanoid(6) + image.originalname;
-          const imageUrl = await storeToFirebase(imageName);
-          const jobDetails = {
-            id,
-            image: imageUrl,
-            imagename: imageName,
-            overview,
-            salary,
-            featured,
-            company,
-            website,
-            duration,
-            position,
-            location,
-            post,
-            jobcategory,
-          };
-          await this.service.updateJobService(jobDetails);
-          return res.status(201).json({ message: "Successfully Updated" });
-        } else {
-          return res.status(500).json({ message: "Internal Server Error" });
-        }
-      } else {
-        // admin wants to keep the old image
-        const retrieveOldImage = await this.service.readJobByIDService(id);
-        const retrievedOldImageName = retrieveOldImage.imagename;
-        const retrievedImageNameLink = retrieveOldImage.image;
-        const jobDetails = {
-          id,
-          image: retrievedImageNameLink,
-          imagename: retrievedOldImageName,
-          overview,
-          salary,
-          featured,
-          company,
-          website,
-          duration,
-          position,
-          location,
-          post,
-          jobcategory,
-        };
-        await this.service.updateJobService(jobDetails);
-        return res.status(201).json({ message: "Successfully Updated" });
-      }
+      const job = await this.service.updateJobService(jobDetails);
+      if (job.error) return res.status(500).json({ message: job.error });
+      return res.status(201).json({ message: "Successfully Updated" });
     } catch (error) {
       console.error("update job {controller}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -216,13 +178,9 @@ class JobController {
   async deleteJob(req, res) {
     const { id } = req.params;
     try {
-      const getImage = await this.service.readJobByIDService(id);
-      const image = getImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(image);
-      if (deletedImageFromFirebase) {
-        await this.service.deleteJobService(id);
-        return res.status(201).json({ message: "Successfully Deleted" });
-      }
+      const job = await this.service.deleteJobService(id);
+      if (job.error) return res.status(500).json({ message: job.error });
+      return res.status(201).json({ message: "Successfully Deleted" });
     } catch (error) {
       console.error("delete {delete job}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });

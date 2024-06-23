@@ -1,6 +1,3 @@
-import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
-import { nanoid } from "nanoid";
-
 class ArticleController {
   constructor(service) {
     this.service = service;
@@ -10,19 +7,17 @@ class ArticleController {
     const { title, author, post, featured, mainfeatured, category } = req.body;
     const image = req.file;
     try {
-      const imageName = nanoid(6) + image.originalname;
-      const imageUrl = await storeToFirebase(imageName);
       const articleData = {
+        image,
         title,
         author,
         post,
         featured,
         mainfeatured,
         category,
-        image: imageUrl,
-        imagename: imageName,
       };
       const article = await this.service.createArticleService(articleData);
+      if (article.error) return res.status(500).json({ message: "Error in Uploading Image" });
       return res.status(201).json({ message: "Successfully Created" });
     } catch (error) {
       console.error("controller {create article}:", error.message);
@@ -116,66 +111,31 @@ class ArticleController {
     const { id } = req.params;
     const { title, post, featured, mainfeatured, category } = req.body;
     const image = req.file;
+    const articleData = {
+      id,
+      image,
+      title,
+      post,
+      featured,
+      mainfeatured,
+      category,
+    };
     try {
-      if (image !== undefined) {
-        // admin wants to update the image and other text
-        const deleteImage = await this.service.readArticleByIdService(id);
-        const deleteImageName = deleteImage.imagename;
-        const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
-        if (deletedImageFromFirebase) {
-          const imageName = nanoid(6) + image.originalname;
-          const imageUrl = await storeToFirebase(imageName);
-          const articleData = {
-            id,
-            title,
-            post,
-            featured,
-            mainfeatured,
-            category,
-            image: imageUrl,
-            imagename: imageName,
-          };
-          await this.service.updateArticleService(articleData);
-          return res.status(201).json({ message: "Successfully Updated" });
-        } else {
-          return res.status(500).json({ message: "Internal Server Error" });
-        }
-      } else {
-        // admin wants to keep the old image
-        const retrieveOldImage = await this.service.readArticleByIdService(id);
-        const retrievedOldImageName = retrieveOldImage.imagename;
-        const retrievedImageNameLink = retrieveOldImage.image;
-        const articleData = {
-          id,
-          title,
-          post,
-          featured,
-          mainfeatured,
-          category,
-          image: retrievedImageNameLink,
-          imagename: retrievedOldImageName,
-        };
-        await this.service.updateArticleService(articleData);
-        return res.status(201).json({ message: "Successfully Updated" });
-      }
+      const article = await this.service.updateArticleService(articleData);
+      if (article.error) return res.status(500).json({ message: article.error });
+      return res.status(201).json({ message: "Successfully Updated" });
     } catch (error) {
-      // console.error("controller {update article}:", error.message);
-      // return res.status(500).json({ message: "Internal Server Error" });
+      console.error("controller {update article}:", error.message);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
   async deleteArticle(req, res) {
     const { id } = req.params;
     try {
-      const getImage = await this.service.readArticleByIdService(id);
-      const image = getImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(image);
-      if (deletedImageFromFirebase) {
-        await this.service.deleteArticleService(id);
-        return res.status(201).json("Successfully Deleted");
-      } else {
-        return res.status(500).json({ message: "Internal Server Error" });
-      }
+      const article = await this.service.deleteArticleService(id);
+      if (article.error) return res.status(500).json({ message: article.error });
+      return res.status(201).json("Successfully Deleted");
     } catch (error) {
       console.error("controller {delete article}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
