@@ -182,7 +182,7 @@ class JobService {
       const getImage = await this.readJobByIDService(id);
       const image = getImage.imagename;
       const deletedImageFromFirebase = await deleteFromFirebase(image);
-      if (!deletedImageFromFirebase) {
+      if (deletedImageFromFirebase) {
         const job = await this.database.deleteJob(id);
         return job;
       } else {
