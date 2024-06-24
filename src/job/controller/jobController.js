@@ -151,21 +151,21 @@ class JobController {
       jobcategory,
     } = req.body;
     const image = req.file;
-    const jobDetails = {
-      id,
-      image,
-      overview,
-      salary,
-      featured,
-      company,
-      website,
-      duration,
-      position,
-      location,
-      post,
-      jobcategory,
-    };
     try {
+      const jobDetails = {
+        id,
+        image,
+        overview,
+        salary,
+        featured,
+        company,
+        website,
+        duration,
+        position,
+        location,
+        post,
+        jobcategory,
+      };
       const job = await this.service.updateJobService(jobDetails);
       if (job.error) return res.status(500).json({ message: job.error });
       return res.status(201).json({ message: "Successfully Updated" });

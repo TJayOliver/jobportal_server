@@ -151,7 +151,7 @@ class JobService {
         }
       } else {
         // admin wants to keep the old image
-        const retrieveOldImage = await this.readJobByIDService(id);
+        const retrieveOldImage = await this.readJobByIDService(jobDetails.id);
         const retrievedOldImageName = retrieveOldImage.imagename;
         const retrievedImageNameLink = retrieveOldImage.image;
         const jobContent = {
@@ -160,14 +160,14 @@ class JobService {
           imagename: retrievedOldImageName,
           overview: jobDetails.overview,
           salary: jobDetails.salary,
-          featured: jobDetails.salary,
+          featured: jobDetails.featured,
           company: jobDetails.company,
           website: jobDetails.website,
-          duration: jobDetails.website,
-          position: jobDetails.duration,
-          location: jobDetails.position,
-          post: jobDetails.location,
-          jobcategory: jobDetails.post,
+          duration: jobDetails.duration,
+          position: jobDetails.position,
+          location: jobDetails.location,
+          post: jobDetails.post,
+          jobcategory: jobDetails.jobcategory,
         };
         const job = await this.database.updateJob(jobContent);
         return job;
@@ -182,7 +182,7 @@ class JobService {
       const getImage = await this.readJobByIDService(id);
       const image = getImage.imagename;
       const deletedImageFromFirebase = await deleteFromFirebase(image);
-      if (deletedImageFromFirebase) {
+      if (!deletedImageFromFirebase) {
         const job = await this.database.deleteJob(id);
         return job;
       } else {
