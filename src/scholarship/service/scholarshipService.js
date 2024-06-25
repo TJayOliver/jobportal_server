@@ -9,7 +9,7 @@ class ScholarshipService {
 
   async createScholarshipService(scholarshipData) {
     try {
-      const uploaded = await storeToFirebase(jobDetails.image);
+      const uploaded = await storeToFirebase(scholarshipData.image);
       const imageUrl = uploaded.imageURL;
       const imageName = uploaded.imageName;
       if (!uploaded.error) {
