@@ -30,7 +30,7 @@ class JobDatabase {
 
   async readFeaturedJob(value) {
     try {
-      const job = await jobModel.find({ featured: value }).limit(6).sort({ datecreated: -1 });
+      const job = await jobModel.find({ featured: value }).limit(8).sort({ datecreated: -1 });
       return job;
     } catch (error) {
       throw error;
