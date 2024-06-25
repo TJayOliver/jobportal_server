@@ -1,5 +1,3 @@
-import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
-
 class ScholarshipController {
   constructor(scholarshipService) {
     this.service = scholarshipService;
