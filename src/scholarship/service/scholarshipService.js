@@ -139,7 +139,7 @@ class ScholarshipService {
     try {
       // admin wants to update the old image
       if (scholarshipData.image !== undefined) {
-        const deleteImage = await this.readArticleByIdService(scholarshipData.id);
+        const deleteImage = await this.readScholarshipByIDService(scholarshipData.id);
         const deleteImageName = deleteImage.imagename;
         const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
         if (deletedImageFromFirebase) {
