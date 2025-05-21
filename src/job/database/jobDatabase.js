@@ -59,7 +59,6 @@ class JobDatabase {
   }
 
   async searchJobByPosition(position) {
-    const { position } = jobDetails;
     try {
       const jobs = await jobModel.find({
         position: { $regex: position, $options: "i" },
