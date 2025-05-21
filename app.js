@@ -55,7 +55,6 @@ app.use(scholarshipRouter);
 app.use(subscriberRouter);
 app.use(jobRouter);
 app.use(categoryRouter);
-app.use(cookieRouter);
 
 firebaseApp;
 
