@@ -54,14 +54,10 @@ class JobController {
   }
 
   async readAllJobs(req, res) {
-    const callCookie = res.locals.callCookie;
-    const country = res.locals.country;
     try {
       const job = await this.service.readAllJobsService();
       return res.status(201).json({
         message: "Successfully Retrieved",
-        callCookie,
-        country,
         data: job,
       });
     } catch (error) {
@@ -98,14 +94,10 @@ class JobController {
 
   async readJobByID(req, res) {
     const { id } = req.params;
-    const callCookie = res.locals.callCookie;
-    const country = res.locals.country;
     try {
       const job = await this.service.readJobByIDService(id);
       return res.status(201).json({
         message: "Successfully retrieved",
-        callCookie,
-        country,
         data: [job],
       });
     } catch (error) {

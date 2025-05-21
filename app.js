@@ -12,7 +12,6 @@ import scholarshipRouter from "./src/scholarship/router/scholarshipRouter.js";
 import subscriberRouter from "./src/subscribers/router/subscriberRouter.js";
 import jobRouter from "./src/job/router/jobRouter.js";
 import categoryRouter from "./src/category/router/categoryRouter.js";
-import cookieRouter from "./src/cookies/router/cookieRouter.js";
 import { retrieveToken } from "./configuration/tokens.js";
 import { connectMongoDB } from "./configuration/mongodb.config.js";
 import compression from "compression";

@@ -54,14 +54,10 @@ class ScholarshipController {
   }
 
   async readAllScholarships(req, res) {
-    const callCookie = res.locals.callCookie;
-    const country = res.locals.country;
     try {
       const scholarship = await this.service.readAllScholarshipService();
       return res.status(201).json({
         message: "Successfully retrieved",
-        callCookie,
-        country,
         data: scholarship,
       });
     } catch (error) {
@@ -102,15 +98,11 @@ class ScholarshipController {
   }
 
   async readScholarshipByID(req, res) {
-    const callCookie = res.locals.callCookie;
-    const country = res.locals.country;
     const { id } = req.params;
     try {
       const scholarship = await this.service.readScholarshipByIDService(id);
       return res.status(201).json({
         message: "Successfully Retrieved",
-        callCookie,
-        country,
         data: [scholarship],
       });
     } catch (error) {
