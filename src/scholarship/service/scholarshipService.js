@@ -1,6 +1,9 @@
 import { nanoid } from "nanoid";
 import { myCache, cacheTime } from "../../../configuration/cache.config.js";
-import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
+import {
+  storeToFirebase,
+  deleteFromFirebase,
+} from "../../../lib/storeFirebase.js";
 
 class ScholarshipService {
   constructor(database) {
@@ -21,7 +24,6 @@ class ScholarshipService {
           deadline: scholarshipData.deadline,
           description: scholarshipData.description,
           post: scholarshipData.post,
-          agent: scholarshipData.agent,
           featured: scholarshipData.featured,
           scholarshiptype: scholarshipData.scholarshiptype,
           programs: scholarshipData.programs,
@@ -29,7 +31,9 @@ class ScholarshipService {
           country: scholarshipData.country,
           author: scholarshipData.author,
         };
-        const scholarship = await this.database.createScholarship(scholarshipContent);
+        const scholarship = await this.database.createScholarship(
+          scholarshipContent
+        );
         return scholarship;
       } else {
         return { error: uploaded.error };
@@ -61,19 +65,6 @@ class ScholarshipService {
     }
   }
 
-  async readScholarshipByCountryService(country) {
-    const cacheKey = "readscholarshipbycountry";
-    try {
-      const cachedData = myCache.get(cacheKey);
-      if (cachedData) return cachedData;
-      const scholarship = await this.database.readScholarshipByCountry(country);
-      myCache.set(cacheKey, scholarship, cacheTime);
-      return scholarship;
-    } catch (error) {
-      connsole.error("read scholarship by country {service}:", error.message);
-    }
-  }
-
   async readFeaturedScholarshipService(value) {
     const cacheKey = "readFeaturedScholarship";
     try {
@@ -92,7 +83,9 @@ class ScholarshipService {
     try {
       const cachedData = myCache.get(cacheKey);
       if (cachedData) return cachedData;
-      const scholarship = await this.database.readScholarshipByCategory(scholarshipcategory);
+      const scholarship = await this.database.readScholarshipByCategory(
+        scholarshipcategory
+      );
       myCache.set(cacheKey, scholarship, cacheTime);
       return scholarship;
     } catch (error) {
@@ -113,16 +106,42 @@ class ScholarshipService {
     }
   }
 
-  async searchScholarshipByCountryService(country) {
+  async searchScholarshipByNameService(scholarshipname) {
     const cacheKey = "readScholarshipByID";
     try {
       const cachedData = myCache.get(cacheKey);
       if (cachedData) return cachedData;
-      const scholarship = await this.database.searchScholarshipByCountry(country);
+      const scholarship = await this.database.searchScholarshipByCountry(
+        scholarshipname
+      );
       myCache.set(cacheKey, scholarship, cacheTime);
       return scholarship;
     } catch (error) {
-      console.error("read scholarship by country {service}:", error.message);
+      console.error("read scholarship by name {service}:", error.message);
+    }
+  }
+
+  async searchScholarshipByRecentAndOldestService(filter) {
+    try {
+      const scholarship =
+        await this.database.searchScholarshipByRecentAndOldest(filter);
+      return scholarship;
+    } catch (error) {
+      console.error(
+        "search scholarship by recent and oldest {service}:",
+        error.message
+      );
+    }
+  }
+
+  async searchScholarshipByFiltersService(filter) {
+    try {
+      const scholarship = await this.database.searchScholarshipByFilters(
+        filter
+      );
+      return scholarship;
+    } catch (error) {
+      console.error("search scholarship by filters {service}:", error.message);
     }
   }
 
@@ -139,9 +158,13 @@ class ScholarshipService {
     try {
       // admin wants to update the old image
       if (scholarshipData.image !== undefined) {
-        const deleteImage = await this.readScholarshipByIDService(scholarshipData.id);
+        const deleteImage = await this.readScholarshipByIDService(
+          scholarshipData.id
+        );
         const deleteImageName = deleteImage.imagename;
-        const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
+        const deletedImageFromFirebase = await deleteFromFirebase(
+          deleteImageName
+        );
         if (deletedImageFromFirebase) {
           const uploaded = await storeToFirebase(scholarshipData.image);
           const imageUrl = uploaded.imageURL;
@@ -155,14 +178,15 @@ class ScholarshipService {
               deadline: scholarshipData.deadline,
               description: scholarshipData.description,
               post: scholarshipData.post,
-              agent: scholarshipData.agent,
               featured: scholarshipData.featured,
               scholarshiptype: scholarshipData.scholarshiptype,
               programs: scholarshipData.programs,
               scholarshipcategory: scholarshipData.scholarshipcategory,
               country: scholarshipData.country,
             };
-            const scholarship = await this.database.updateScholarship(scholarshipContent);
+            const scholarship = await this.database.updateScholarship(
+              scholarshipContent
+            );
             return scholarship;
           } else {
             return { error: uploaded.error };
@@ -183,14 +207,15 @@ class ScholarshipService {
           deadline: scholarshipData.deadline,
           description: scholarshipData.description,
           post: scholarshipData.post,
-          agent: scholarshipData.agent,
           featured: scholarshipData.featured,
           scholarshiptype: scholarshipData.scholarshiptype,
           programs: scholarshipData.programs,
           scholarshipcategory: scholarshipData.scholarshipcategory,
           country: scholarshipData.country,
         };
-        const scholarship = await this.database.updateScholarship(scholarshipContent);
+        const scholarship = await this.database.updateScholarship(
+          scholarshipContent
+        );
         return scholarship;
       }
     } catch (error) {

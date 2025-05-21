@@ -1,6 +1,9 @@
 import { nanoid } from "nanoid";
 import { myCache, cacheTime } from "../../../configuration/cache.config.js";
-import { storeToFirebase, deleteFromFirebase } from "../../../lib/storeFirebase.js";
+import {
+  storeToFirebase,
+  deleteFromFirebase,
+} from "../../../lib/storeFirebase.js";
 
 class JobService {
   constructor(database) {
@@ -96,12 +99,33 @@ class JobService {
     }
   }
 
-  async searchJobService(jobDetails) {
+  async searchJobByPositionService(position) {
     try {
-      const job = await this.database.searchJob(jobDetails);
+      const job = await this.database.searchJobPosition(position);
       return job;
     } catch (error) {
-      console.error("search job {service}:", error.message);
+      console.error("search job by position {service}:", error.message);
+    }
+  }
+
+  async searchJobByRecentAndOldestService(filter) {
+    try {
+      const job = await this.database.searchJobByRecentAndOldest(filter);
+      return job;
+    } catch (error) {
+      console.error(
+        "search job by recent and oldest {service}:",
+        error.message
+      );
+    }
+  }
+
+  async searchJobByFiltersService(filter) {
+    try {
+      const job = await this.database.searchJobByFilters(filter);
+      return job;
+    } catch (error) {
+      console.error("search job by filters {service}:", error.message);
     }
   }
 
@@ -120,7 +144,9 @@ class JobService {
       if (jobDetails.image !== undefined) {
         const deleteImage = await this.readJobByIDService(jobDetails.id);
         const deleteImageName = deleteImage.imagename;
-        const deletedImageFromFirebase = await deleteFromFirebase(deleteImageName);
+        const deletedImageFromFirebase = await deleteFromFirebase(
+          deleteImageName
+        );
         if (deletedImageFromFirebase) {
           const uploaded = await storeToFirebase(jobDetails.image);
           const imageUrl = uploaded.imageURL;

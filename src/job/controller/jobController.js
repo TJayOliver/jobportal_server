@@ -34,7 +34,8 @@ class JobController {
         image,
       };
       const job = await this.service.createJobService(jobDetails);
-      if (job.error) return res.status(500).json({ message: "Error in Uploading Image" });
+      if (job.error)
+        return res.status(500).json({ message: "Error in Uploading Image" });
       return res.status(201).json({ message: "Successfully Created" });
     } catch (error) {
       console.error("create job {controller}:", error.message);
@@ -73,7 +74,9 @@ class JobController {
     try {
       const value = "true";
       const job = await this.service.readFeaturedJobService(value);
-      return res.status(201).json({ message: "Successfully Retrieved", data: job });
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: job });
     } catch (error) {
       console.error("read featured job {controller}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -84,7 +87,9 @@ class JobController {
     const { jobcategory } = req.params;
     try {
       const job = await this.service.readJobByCategoryService(jobcategory);
-      return res.status(201).json({ message: "Successfully Retrieved", data: job });
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: job });
     } catch (error) {
       console.error("read job by category {controller}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -108,19 +113,47 @@ class JobController {
     }
   }
 
-  async searchJob(req, res) {
-    const { position, location, jobcategory, duration } = req.body;
+  async searchJobByPosition(req, res) {
+    const { position } = req.body;
     try {
-      const jobDetails = {
-        position,
-        location,
-        jobcategory,
-        duration,
-      };
-      const job = await this.service.searchJobService(jobDetails);
-      return res.status(201).json({ message: "Successfully Retrieved", data: job });
+      const job = await this.service.searchJobPositionService(position);
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: job });
     } catch (error) {
-      console.error("search job {controller}:", error.message);
+      console.error("search job by position {controller}:", error.message);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  async searchJobByRecentAndOldest(req, res) {
+    const { filter } = req.body;
+    try {
+      const job = await this.service.searchJobByRecentAndOldestService(filter);
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: job });
+    } catch (error) {
+      console.error(
+        "search job by recent and oldest {controller}:",
+        error.message
+      );
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  async searchJobByFilters(req, res) {
+    const { filter } = req.body;
+    try {
+      const job = await this.service.searchJobByFiltersService(filter);
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: job });
+    } catch (error) {
+      console.error(
+        "search job by recent and oldest {controller}:",
+        error.message
+      );
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -129,7 +162,9 @@ class JobController {
     const { id } = req.params;
     try {
       const job = await this.service.editJobService(id);
-      return res.status(201).json({ message: "Successfully Retrieved", data: job });
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: job });
     } catch (error) {
       console.error("edit job {controller}:", error.message);
       res.status(500).json({ message: "Internal Server Error" });

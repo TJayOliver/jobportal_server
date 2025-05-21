@@ -30,7 +30,10 @@ class JobDatabase {
 
   async readFeaturedJob(value) {
     try {
-      const job = await jobModel.find({ featured: value }).limit(8).sort({ datecreated: -1 });
+      const job = await jobModel
+        .find({ featured: value })
+        .limit(8)
+        .sort({ datecreated: -1 });
       return job;
     } catch (error) {
       throw error;
@@ -55,24 +58,42 @@ class JobDatabase {
     }
   }
 
-  async searchJob(jobDetails) {
-    const { position, location, duration, jobcategory } = jobDetails;
+  async searchJobByPosition(position) {
+    const { position } = jobDetails;
     try {
-      let query = {};
-      if (position) {
-        query.position = { $regex: position, $options: "i" };
-      }
-      if (location) {
-        query.location = { $regex: location, $options: "i" };
-      }
-      if (duration) {
-        query.duration = duration;
-      }
-      if (jobcategory) {
-        query.jobcategory = jobcategory;
-      }
-      const jobs = await jobModel.find(query);
+      const jobs = await jobModel.find({
+        position: { $regex: position, $options: "i" },
+      });
       return jobs;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async searchJobByRecentAndOldest(filter) {
+    try {
+      const sortOrder = filter === "Recent" ? -1 : 1;
+      const scholarship = await jobModel.find().sort({
+        datecreated: sortOrder,
+      });
+      return scholarship;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async searchJobByFilters(filters) {
+    try {
+      const query = {};
+      // Apply filters only if they exist in the request
+      if (filters.schedule && filters.schedule.length > 0) {
+        query.schedule = { $in: filters.schedule }; // Matches any of the selected types
+      }
+      if (filters.category && filters.category.length > 0) {
+        query.category = { $in: filters.category }; // Matches any of the selected categories
+      }
+      const job = await jobModel.find(query).sort({ createdAt: -1 }).exec();
+      return job;
     } catch (error) {
       throw error;
     }

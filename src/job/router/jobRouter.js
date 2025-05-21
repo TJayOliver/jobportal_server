@@ -31,6 +31,12 @@ jobRouter.post(
 jobRouter.post("/job/search", async (req, res) =>
   jobController.searchJob(req, res)
 );
+jobRouter.post("/job/filtersearch", async (req, res) =>
+  jobController.searchJobByRecentAndOldest(req, res)
+);
+jobRouter.post("/job/checkboxfilter", async (req, res) =>
+  jobController.searchJobByFilters(req, res)
+);
 jobRouter.put(
   "/job/update/:id",
   upload.single("image"),

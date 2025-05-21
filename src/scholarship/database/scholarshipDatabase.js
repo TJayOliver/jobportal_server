@@ -21,18 +21,8 @@ class ScholarshipDatabase {
 
   async readScholarship() {
     try {
-      const scholarship = await scholarshipModel.find().sort({ datecreated: -1 });
-      return scholarship;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async readScholarshipByCountry(country) {
-    try {
       const scholarship = await scholarshipModel
-        .find({ country: country })
-        .limit(8)
+        .find()
         .sort({ datecreated: -1 });
       return scholarship;
     } catch (error) {
@@ -74,11 +64,46 @@ class ScholarshipDatabase {
     }
   }
 
-  async searchScholarshipByCountry(country) {
+  async searchScholarshipByName(scholarshipname) {
     try {
       const scholarship = await scholarshipModel.find({
-        country: { $regex: country, $options: "i" },
+        scholarshipname: { $regex: scholarshipname, $options: "i" },
       });
+      return scholarship;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async searchScholarshipByRecentAndOldest(filter) {
+    try {
+      const sortOrder = filter === "Recent" ? -1 : 1;
+      const scholarship = await scholarshipModel.find().sort({
+        datecreated: sortOrder,
+      });
+      return scholarship;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async searchScholarshipByFilters(filters) {
+    try {
+      const query = {};
+      // Apply filters only if they exist in the request
+      if (filters.type && filters.type.length > 0) {
+        query.type = { $in: filters.type }; // Matches any of the selected types
+      }
+      if (filters.level && filters.level.length > 0) {
+        query.level = { $in: filters.level }; // Matches any of the selected levels
+      }
+      if (filters.category && filters.category.length > 0) {
+        query.category = { $in: filters.category }; // Matches any of the selected categories
+      }
+      const scholarship = await scholarshipModel
+        .find(query)
+        .sort({ createdAt: -1 })
+        .exec();
       return scholarship;
     } catch (error) {
       throw error;
@@ -105,14 +130,7 @@ class ScholarshipDatabase {
         scholarshipname,
         deadline,
         description,
-        eligibility,
-        duration,
-        programsoffered,
-        documentsrequired,
-        benefits,
-        applicationinformation,
-        hostuniversity,
-        agent,
+        post,
         featured,
         scholarshiptype,
         programs,
@@ -125,14 +143,7 @@ class ScholarshipDatabase {
         scholarshipname,
         deadline,
         description,
-        eligibility,
-        duration,
-        programsoffered,
-        documentsrequired,
-        benefits,
-        applicationinformation,
-        hostuniversity,
-        agent,
+        post,
         featured,
         scholarshiptype,
         programs,

@@ -9,7 +9,6 @@ class ScholarshipController {
       deadline,
       description,
       post,
-      agent,
       featured,
       scholarshiptype,
       programs,
@@ -25,7 +24,6 @@ class ScholarshipController {
         deadline,
         description,
         post,
-        agent,
         featured,
         scholarshiptype,
         programs,
@@ -33,8 +31,11 @@ class ScholarshipController {
         country,
         author,
       };
-      const scholarship = await this.service.createScholarshipService(scholarshipData);
-      if (scholarship.error) return res.status(500).json({ message: "Error in Uploading Image" });
+      const scholarship = await this.service.createScholarshipService(
+        scholarshipData
+      );
+      if (scholarship.error)
+        return res.status(500).json({ message: "Error in Uploading Image" });
       return res.status(201).json({ message: "Successfully Created" });
     } catch (error) {
       console.error("controller {create scholarship}", error.message);
@@ -72,7 +73,9 @@ class ScholarshipController {
   async readFeaturedScholarship(req, res) {
     try {
       const value = "true";
-      const scholarship = await this.service.readFeaturedScholarshipService(value);
+      const scholarship = await this.service.readFeaturedScholarshipService(
+        value
+      );
       res.status(201).json({
         message: "Successfully retrieved",
         data: scholarship,
@@ -86,8 +89,12 @@ class ScholarshipController {
   async readScholarshipByCategory(req, res) {
     const { scholarshipcategory } = req.params;
     try {
-      const scholarship = await this.service.readScholarshipByCategoryService(scholarshipcategory);
-      return res.status(201).json({ message: "Successfully Retrieved", data: scholarship });
+      const scholarship = await this.service.readScholarshipByCategoryService(
+        scholarshipcategory
+      );
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: scholarship });
     } catch (error) {
       console.error("controller {read scholarship by category}", error.message);
       res.status(500).json({ message: "Internal Server Error" });
@@ -112,24 +119,52 @@ class ScholarshipController {
     }
   }
 
-  async readScholarshipByCountry(req, res) {
-    const { countryname } = req.params;
+  async searchScholarshipByName(req, res) {
+    const { scholarshipname } = req.body;
     try {
-      const scholarship = await this.service.readScholarshipByCountryService(countryname);
-      return res.status(201).json({ message: "Successfully Retrieved", data: scholarship });
+      const scholarship = await this.service.searchScholarshipByNameService(
+        scholarshipname
+      );
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: scholarship });
     } catch (error) {
-      console.error("controller {read scholarship by country}:", error.message);
+      console.error("controller {search scholarship by name}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
-  async searchScholarshipByCountry(req, res) {
-    const { country } = req.body;
+  async searchScholarshipByRecentAndOldest(req, res) {
+    const { filter } = req.body;
     try {
-      const scholarship = await this.service.searchScholarshipByCountryService(country);
-      return res.status(201).json({ message: "Successfully Retrieved", data: scholarship });
+      const scholarship =
+        await this.service.searchScholarshipByRecentAndOldestService(filter);
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: scholarship });
     } catch (error) {
-      console.error("controller {search scholarship by country}:", error.message);
+      console.error(
+        "search scholarship by recent and oldest {controller}:",
+        error.message
+      );
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  async searchScholarshipByFilters(req, res) {
+    const { filter } = req.body;
+    try {
+      const scholarship = await this.service.searchScholarshipByFiltersService(
+        filter
+      );
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: scholarship });
+    } catch (error) {
+      console.error(
+        "search scholarship by filters {controller}:",
+        error.message
+      );
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -138,7 +173,9 @@ class ScholarshipController {
     const { id } = req.params;
     try {
       const scholarship = await this.service.editScholarshipService(id);
-      return res.status(201).json({ message: "Successfully Retrieved", data: scholarship });
+      return res
+        .status(201)
+        .json({ message: "Successfully Retrieved", data: scholarship });
     } catch (error) {
       console.error("controller {edit scholarship}:", error.message);
       return res.status(500).json({ message: "Internal Server Error" });
@@ -151,7 +188,6 @@ class ScholarshipController {
       deadline,
       description,
       post,
-      agent,
       featured,
       scholarshiptype,
       programs,
@@ -169,15 +205,17 @@ class ScholarshipController {
         deadline,
         description,
         post,
-        agent,
         featured,
         scholarshiptype,
         programs,
         scholarshipcategory,
         country,
       };
-      const scholarship = await this.service.updateScholarshipService(scholarshipData);
-      if (scholarship.error) return res.status(500).json({ message: scholarship.error });
+      const scholarship = await this.service.updateScholarshipService(
+        scholarshipData
+      );
+      if (scholarship.error)
+        return res.status(500).json({ message: scholarship.error });
       return res.status(201).json({ message: "Successfully Updated" });
     } catch (error) {
       console.error("controller {edit scholarship}", error.message);
@@ -189,7 +227,8 @@ class ScholarshipController {
     const { id } = req.params;
     try {
       const scholarship = await this.service.deleteScholarshipService(id);
-      if (scholarship.error) return res.status(500).json({ message: scholarship.error });
+      if (scholarship.error)
+        return res.status(500).json({ message: scholarship.error });
       return res.status(201).json({ message: "Successfully Deleted" });
     } catch (error) {
       console.error("delete scholarship {controller}", error.message);

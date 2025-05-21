@@ -25,11 +25,14 @@ scholarshipRouter.get("/scholarship/count", async (req, res) =>
 scholarshipRouter.get("/scholarship/edit/:id", async (req, res) =>
   scholarshipController.editScholarship(req, res)
 );
-scholarshipRouter.get("/scholarship/country/:countryname", async (req, res) =>
-  scholarshipController.readScholarshipByCountry(req, res)
-);
 scholarshipRouter.post("/scholarship/search", async (req, res) =>
-  scholarshipController.searchScholarshipByCountry(req, res)
+  scholarshipController.searchScholarshipByName(req, res)
+);
+scholarshipRouter.post("/scholarship/filtersearch", async (req, res) =>
+  scholarshipController.searchScholarshipByRecentAndOldest(req, res)
+);
+scholarshipRouter.post("/scholarship/checkboxfilter", async (req, res) =>
+  scholarshipController.searchScholarshipByFilters(req, res)
 );
 scholarshipRouter.post(
   "/scholarship/create",

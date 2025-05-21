@@ -15,19 +15,6 @@ const administratorSchema = new Schema({
   datecreated: { type: Date, required: true, default: new Date() },
 });
 
-const articleSchema = new Schema({
-  id: { type: String, required: true, unique: true },
-  image: { type: String, required: true },
-  imagename: { type: String, required: true },
-  title: { type: String, required: true },
-  author: { type: String, required: true },
-  post: { type: String, required: true },
-  featured: { type: String, required: true, enum: ["true", "false"] },
-  mainfeatured: { type: String, required: true, enum: ["true", "false"] },
-  category: { type: String, required: true, enum: ["Job", "Scholarship"] },
-  datecreated: { type: Date, required: true, default: new Date() },
-});
-
 const categorySchema = new Schema({
   id: { type: String, required: true, unique: true },
   categoryname: String,
@@ -40,6 +27,7 @@ const jobsSchema = new Schema({
   image: { type: String, required: true },
   imagename: { type: String, required: true },
   salary: { type: String, required: true },
+  category: { type: String, required: true },
   featured: { type: String, enum: ["true", "false"] },
   company: { type: String, required: true },
   website: { type: String },
@@ -66,8 +54,6 @@ const scholarshipSchema = new Schema({
   scholarshipname: { type: String, required: true },
   deadline: { type: Date, default: new Date() },
   description: { type: String, required: true },
-  agent: { type: String, required: true, enum: ["Agent", "No agent"] },
-  featured: { type: String, required: true, enum: ["true", "false"] },
   scholarshiptype: {
     type: String,
     required: true,
@@ -87,7 +73,13 @@ const scholarshipSchema = new Schema({
   scholarshipcategory: {
     type: String,
     required: true,
-    enum: ["Government", "Private", "Organizational", "International", "Research"],
+    enum: [
+      "Government",
+      "Private",
+      "Organizational",
+      "International",
+      "Research",
+    ],
   },
   country: {
     type: String,
@@ -301,43 +293,18 @@ const subscribersSchema = new Schema({
   email: { type: String, required: true, lowercase: true },
 });
 
-const userLocationSchema = new Schema({
-  id: { type: String, required: true, unique: true },
-  ipAddress: { type: String, required: true },
-  country: { type: String, required: true },
-  city: { type: String, required: true },
-  datecreated: { type: Date, default: new Date() },
-});
-
-const testimonialSchema = new Schema({
-  id: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  image: { type: String, required: true },
-  imagename: { type: String, required: true },
-  quote: { type: String, required: true },
-  position: { type: String, required: true },
-  author: { type: String, required: true },
-  datecreated: { type: Date, default: new Date() },
-});
-
 const adminModel = model("Administrator", administratorSchema);
-const articleModel = model("Article", articleSchema);
 const categoryModel = model("Category", categorySchema);
 const jobModel = model("Job", jobsSchema);
 const mailMessagesModel = model("Mailmessages", mailMessagesSchema);
 const scholarshipModel = model("Scholarship", scholarshipSchema);
 const subscribersModel = model("Subscriber", subscribersSchema);
-const userLocationModel = model("Userlocation", userLocationSchema);
-const testimonialModel = model("Testimonial", testimonialSchema);
 
 export {
   adminModel,
-  articleModel,
   categoryModel,
   jobModel,
   mailMessagesModel,
   scholarshipModel,
   subscribersModel,
-  userLocationModel,
-  testimonialModel,
 };
