@@ -1,4 +1,4 @@
 import nodecache from "node-cache";
 
 export const myCache = new nodecache();
-export const cacheTime = 1;
+export const cacheTime = 0;

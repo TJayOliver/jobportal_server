@@ -108,7 +108,7 @@ class JobController {
   async searchJobByPosition(req, res) {
     const { position } = req.body;
     try {
-      const job = await this.service.searchJobPositionService(position);
+      const job = await this.service.searchJobByPositionService(position);
       return res
         .status(201)
         .json({ message: "Successfully Retrieved", data: job });
@@ -135,7 +135,8 @@ class JobController {
   }
 
   async searchJobByFilters(req, res) {
-    const { filter } = req.body;
+    const { duration, category } = req.body;
+    const filter = { duration, category };
     try {
       const job = await this.service.searchJobByFiltersService(filter);
       return res

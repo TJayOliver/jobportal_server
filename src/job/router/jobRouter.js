@@ -29,7 +29,7 @@ jobRouter.post(
   async (req, res) => jobController.createJob(req, res)
 );
 jobRouter.post("/job/search", async (req, res) =>
-  jobController.searchJob(req, res)
+  jobController.searchJobByPosition(req, res)
 );
 jobRouter.post("/job/filtersearch", async (req, res) =>
   jobController.searchJobByRecentAndOldest(req, res)

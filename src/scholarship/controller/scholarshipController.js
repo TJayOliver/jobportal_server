@@ -5,9 +5,9 @@ class ScholarshipController {
 
   async createScholarship(req, res) {
     const {
-      scholarshipname,
+      //scholarshipname,
       deadline,
-      description,
+      //description,
       post,
       featured,
       scholarshiptype,
@@ -16,13 +16,12 @@ class ScholarshipController {
       country,
       author,
     } = req.body;
-    const image = req.file;
+
     try {
       const scholarshipData = {
-        image,
-        scholarshipname,
+        //scholarshipname,
         deadline,
-        description,
+        //description,
         post,
         featured,
         scholarshiptype,
@@ -34,8 +33,6 @@ class ScholarshipController {
       const scholarship = await this.service.createScholarshipService(
         scholarshipData
       );
-      if (scholarship.error)
-        return res.status(500).json({ message: "Error in Uploading Image" });
       return res.status(201).json({ message: "Successfully Created" });
     } catch (error) {
       console.error("controller {create scholarship}", error.message);
@@ -111,12 +108,13 @@ class ScholarshipController {
     }
   }
 
-  async searchScholarshipByName(req, res) {
+  async searchScholarshipByNameOrCountry(req, res) {
     const { scholarshipname } = req.body;
     try {
-      const scholarship = await this.service.searchScholarshipByNameService(
-        scholarshipname
-      );
+      const scholarship =
+        await this.service.searchScholarshipByNameOrCountryService(
+          scholarshipname
+        );
       return res
         .status(201)
         .json({ message: "Successfully Retrieved", data: scholarship });
@@ -144,7 +142,8 @@ class ScholarshipController {
   }
 
   async searchScholarshipByFilters(req, res) {
-    const { filter } = req.body;
+    const { scholarshiptype, programs, scholarshipcategory } = req.body;
+    const filter = { scholarshiptype, programs, scholarshipcategory };
     try {
       const scholarship = await this.service.searchScholarshipByFiltersService(
         filter
@@ -187,12 +186,9 @@ class ScholarshipController {
       country,
     } = req.body;
     const { id } = req.params;
-    const image = req.file;
     try {
       const scholarshipData = {
         id,
-        scholarshipname,
-        image,
         scholarshipname,
         deadline,
         description,
@@ -206,8 +202,6 @@ class ScholarshipController {
       const scholarship = await this.service.updateScholarshipService(
         scholarshipData
       );
-      if (scholarship.error)
-        return res.status(500).json({ message: scholarship.error });
       return res.status(201).json({ message: "Successfully Updated" });
     } catch (error) {
       console.error("controller {edit scholarship}", error.message);
@@ -219,8 +213,6 @@ class ScholarshipController {
     const { id } = req.params;
     try {
       const scholarship = await this.service.deleteScholarshipService(id);
-      if (scholarship.error)
-        return res.status(500).json({ message: scholarship.error });
       return res.status(201).json({ message: "Successfully Deleted" });
     } catch (error) {
       console.error("delete scholarship {controller}", error.message);

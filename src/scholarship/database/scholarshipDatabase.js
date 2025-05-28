@@ -64,10 +64,13 @@ class ScholarshipDatabase {
     }
   }
 
-  async searchScholarshipByName(scholarshipname) {
+  async searchScholarshipByNameOrCountry(scholarshipname) {
     try {
       const scholarship = await scholarshipModel.find({
-        scholarshipname: { $regex: scholarshipname, $options: "i" },
+        $or: [
+          { scholarshipname: { $regex: scholarshipname, $options: "i" } },
+          { country: { $regex: scholarshipname, $options: "i" } },
+        ],
       });
       return scholarship;
     } catch (error) {
@@ -92,13 +95,13 @@ class ScholarshipDatabase {
       const query = {};
       // Apply filters only if they exist in the request
       if (filters.type && filters.type.length > 0) {
-        query.type = { $in: filters.type }; // Matches any of the selected types
+        query.scholarshiptype = { $in: filters.scholarshiptype }; // Matches any of the selected types
       }
       if (filters.level && filters.level.length > 0) {
-        query.level = { $in: filters.level }; // Matches any of the selected levels
+        query.programs = { $in: filters.programs }; // Matches any of the selected levels
       }
       if (filters.category && filters.category.length > 0) {
-        query.category = { $in: filters.category }; // Matches any of the selected categories
+        query.scholarshipcategory = { $in: filters.scholarshipcategory }; // Matches any of the selected categories
       }
       const scholarship = await scholarshipModel
         .find(query)

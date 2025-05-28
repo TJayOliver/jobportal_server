@@ -49,8 +49,6 @@ const mailMessagesSchema = new Schema({
 
 const scholarshipSchema = new Schema({
   id: { type: String, required: true, unique: true },
-  image: { type: String, required: true },
-  imagename: { type: String, required: true },
   scholarshipname: { type: String, required: true },
   deadline: { type: Date, default: new Date() },
   description: { type: String, required: true },
@@ -283,6 +281,7 @@ const scholarshipSchema = new Schema({
       "Zimbabwe",
     ],
   },
+  website: { type: String, required: true },
   post: { type: String, required: true },
   author: { type: String, required: true },
   datecreated: { type: Date, default: new Date() },

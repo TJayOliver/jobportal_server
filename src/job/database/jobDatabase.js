@@ -85,8 +85,8 @@ class JobDatabase {
     try {
       const query = {};
       // Apply filters only if they exist in the request
-      if (filters.schedule && filters.schedule.length > 0) {
-        query.schedule = { $in: filters.schedule }; // Matches any of the selected types
+      if (filters.duration && filters.duration.length > 0) {
+        query.duration = { $in: filters.duration }; // Matches any of the selected types
       }
       if (filters.category && filters.category.length > 0) {
         query.category = { $in: filters.category }; // Matches any of the selected categories
