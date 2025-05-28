@@ -21,6 +21,16 @@ const app = express();
 
 const PORT = process.env.PORT || 4040;
 
+app.use((req, res, next) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://futureforte.netlify.app"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); // Add other allowed methods as needed
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Add other allowed headers as needed
+  next();
+});
+
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(helmet({ crossOriginResourcePolicy: false }));
 
