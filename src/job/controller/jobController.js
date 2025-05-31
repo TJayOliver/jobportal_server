@@ -5,33 +5,31 @@ class JobController {
 
   async createJob(req, res) {
     const {
-      overview,
+      /* overview, */
       salary,
       featured,
       company,
       website,
       duration,
-      position,
+      /* position, */
       location,
       post,
       author,
       jobcategory,
     } = req.body;
-    const image = req.file;
     try {
       const jobDetails = {
-        overview,
+        /* overview, */
         salary,
         featured,
         company,
         website,
         duration,
-        position,
+        /* position, */
         location,
         post,
         author,
         jobcategory,
-        image,
       };
       const job = await this.service.createJobService(jobDetails);
       if (job.error)
@@ -167,7 +165,7 @@ class JobController {
   async updateJob(req, res) {
     const { id } = req.params;
     const {
-      overview,
+      /* overview, */
       salary,
       featured,
       company,
@@ -183,7 +181,7 @@ class JobController {
       const jobDetails = {
         id,
         image,
-        overview,
+        /* overview, */
         salary,
         featured,
         company,

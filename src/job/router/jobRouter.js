@@ -1,6 +1,5 @@
 import express from "express";
 import { jobDependency } from "../settings/jobDependency.js";
-import { upload, handleMulterErrors } from "../../../configuration/multer.js";
 
 const jobRouter = express.Router();
 
@@ -22,11 +21,8 @@ jobRouter.get("/job/count", async (req, res) =>
 jobRouter.get("/job/edit/:id", async (req, res) =>
   jobController.editJob(req, res)
 );
-jobRouter.post(
-  "/job/create",
-  upload.single("image"),
-  handleMulterErrors,
-  async (req, res) => jobController.createJob(req, res)
+jobRouter.post("/job/create", async (req, res) =>
+  jobController.createJob(req, res)
 );
 jobRouter.post("/job/search", async (req, res) =>
   jobController.searchJobByPosition(req, res)
@@ -37,11 +33,8 @@ jobRouter.post("/job/filtersearch", async (req, res) =>
 jobRouter.post("/job/checkboxfilter", async (req, res) =>
   jobController.searchJobByFilters(req, res)
 );
-jobRouter.put(
-  "/job/update/:id",
-  upload.single("image"),
-  handleMulterErrors,
-  async (req, res) => jobController.updateJob(req, res)
+jobRouter.put("/job/update/:id", async (req, res) =>
+  jobController.updateJob(req, res)
 );
 jobRouter.delete("/job/delete/:id", async (req, res) =>
   jobController.deleteJob(req, res)

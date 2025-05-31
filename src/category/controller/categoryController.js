@@ -7,7 +7,6 @@ class CategoryController {
     try {
       const { categoryname } = req.body;
       const author = req.username;
-      console.log(author);
       await categoryname.trim();
       const category = await this.service.createCategoryService(categoryname);
       if (category.error)

@@ -4,6 +4,12 @@ import {
   storeToFirebase,
   deleteFromFirebase,
 } from "../../../lib/storeFirebase.js";
+import {
+  generatePost,
+  generateJobPosition,
+  generateDescription,
+} from "../../../lib/geminiAI.js";
+const website = "futureforte.netlify.app";
 
 class JobService {
   constructor(database) {
@@ -12,31 +18,28 @@ class JobService {
 
   async createJobService(jobDetails) {
     try {
-      const uploaded = await storeToFirebase(jobDetails.image);
-      const imageUrl = uploaded.imageURL;
-      const imageName = uploaded.imageName;
-      if (!uploaded.error) {
-        const jobs = {
-          id: nanoid(),
-          image: imageUrl,
-          imagename: imageName,
-          overview: jobDetails.overview,
-          salary: jobDetails.salary,
-          featured: jobDetails.featured,
-          company: jobDetails.company,
-          website: jobDetails.website,
-          duration: jobDetails.duration,
-          position: jobDetails.position,
-          location: jobDetails.location,
-          post: jobDetails.post,
-          author: jobDetails.author,
-          jobcategory: jobDetails.jobcategory,
-        };
-        const job = await this.database.createJob(jobs);
-        return job;
-      } else {
-        return { error: uploaded.error };
-      }
+      const generatedPost = await generatePost("job", jobDetails.post);
+      const generatedPosition = await generateJobPosition(jobDetails.post);
+      const generatedDescription = await generateDescription(
+        "job",
+        jobDetails.post
+      );
+      const jobs = {
+        id: nanoid(),
+        overview: generatedDescription,
+        salary: jobDetails.salary || "Negotiable",
+        featured: jobDetails.featured,
+        company: jobDetails.company || "Private Employer",
+        website: jobDetails.website || website,
+        duration: jobDetails.duration,
+        position: generatedPosition,
+        location: jobDetails.location,
+        post: generatedPost,
+        author: jobDetails.author,
+        jobcategory: jobDetails.jobcategory,
+      };
+      const job = await this.database.createJob(jobs);
+      return job;
     } catch (error) {
       console.error("create job {service}:", error.message);
     }
@@ -140,64 +143,21 @@ class JobService {
 
   async updateJobService(jobDetails) {
     try {
-      // admin wants to update the old image
-      if (jobDetails.image !== undefined) {
-        const deleteImage = await this.readJobByIDService(jobDetails.id);
-        const deleteImageName = deleteImage.imagename;
-        const deletedImageFromFirebase = await deleteFromFirebase(
-          deleteImageName
-        );
-        if (deletedImageFromFirebase) {
-          const uploaded = await storeToFirebase(jobDetails.image);
-          const imageUrl = uploaded.imageURL;
-          const imageName = uploaded.imageName;
-          if (!uploaded.error) {
-            const jobContent = {
-              id: jobcategory.id,
-              image: imageUrl,
-              imagename: imageName,
-              overview: jobDetails.overview,
-              salary: jobDetails.salary,
-              featured: jobDetails.featured,
-              company: jobDetails.company,
-              website: jobDetails.website,
-              duration: jobDetails.duration,
-              position: jobDetails.position,
-              location: jobDetails.location,
-              post: jobDetails.post,
-              jobcategory: jobDetails.jobcategory,
-            };
-            const job = await this.database.updateJob(jobContent);
-            return job;
-          } else {
-            return { error: uploaded.error };
-          }
-        } else {
-          return { error: "Image wasn't deleted from firebase" };
-        }
-      } else {
-        // admin wants to keep the old image
-        const retrieveOldImage = await this.readJobByIDService(jobDetails.id);
-        const retrievedOldImageName = retrieveOldImage.imagename;
-        const retrievedImageNameLink = retrieveOldImage.image;
-        const jobContent = {
-          id: jobDetails.id,
-          image: retrievedImageNameLink,
-          imagename: retrievedOldImageName,
-          overview: jobDetails.overview,
-          salary: jobDetails.salary,
-          featured: jobDetails.featured,
-          company: jobDetails.company,
-          website: jobDetails.website,
-          duration: jobDetails.duration,
-          position: jobDetails.position,
-          location: jobDetails.location,
-          post: jobDetails.post,
-          jobcategory: jobDetails.jobcategory,
-        };
-        const job = await this.database.updateJob(jobContent);
-        return job;
-      }
+      const jobContent = {
+        id: jobDetails.id,
+        overview: jobDetails.overview,
+        salary: jobDetails.salary,
+        featured: jobDetails.featured,
+        company: jobDetails.company,
+        website: jobDetails.website,
+        duration: jobDetails.duration,
+        position: jobDetails.position,
+        location: jobDetails.location,
+        post: jobDetails.post,
+        jobcategory: jobDetails.jobcategory,
+      };
+      const job = await this.database.updateJob(jobContent);
+      return job;
     } catch (error) {
       console.error("update job {service}:", error.message);
     }
@@ -205,15 +165,8 @@ class JobService {
 
   async deleteJobService(id) {
     try {
-      const getImage = await this.readJobByIDService(id);
-      const image = getImage.imagename;
-      const deletedImageFromFirebase = await deleteFromFirebase(image);
-      if (deletedImageFromFirebase) {
-        const job = await this.database.deleteJob(id);
-        return job;
-      } else {
-        return { error: "Could Not Delete Image From Firebase" };
-      }
+      const job = await this.database.deleteJob(id);
+      return job;
     } catch (error) {
       console.error("delete job {service}:", error.message);
     }
